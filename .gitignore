@@ -20,3 +20,7 @@
 # Go workspace file
 go.work
 /*/tmp
+
+#Node
+node_modules
+package-lock.json
