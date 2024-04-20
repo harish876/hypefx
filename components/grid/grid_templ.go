@@ -12,7 +12,8 @@ import "bytes"
 
 import (
 	"fmt"
-	"github.com/harish876/hypefx/components"
+	"github.com/harish876/hypefx/components/dropdown"
+	"github.com/harish876/hypefx/components/input"
 	"github.com/harish876/hypefx/components/props"
 	"github.com/harish876/hypefx/examples/utils"
 	"github.com/harish876/hypefx/examples/views/layout"
@@ -72,7 +73,7 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(page))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 39, Col: 27}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 40, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -98,7 +99,7 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(page))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 47, Col: 27}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 48, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -143,7 +144,7 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(pageOptions.Current))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 70, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 71, Col: 78}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -156,7 +157,7 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(pageOptions.TotalPages))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 70, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 71, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -198,7 +199,7 @@ func gridHeader(columns []props.GridColumn) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(column.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 81, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 82, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -292,7 +293,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", getField(row, "Name")))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 131, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 132, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -305,7 +306,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", getField(row, "Id")))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 134, Col: 47}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 135, Col: 47}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -323,7 +324,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(utils.StartCase(fmt.Sprintf("%s", getField(row, column.Key))))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 144, Col: 116}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 145, Col: 116}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -347,7 +348,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(item)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 152, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 153, Col: 101}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -370,7 +371,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", getField(row, column.Key)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 158, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 159, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -389,7 +390,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", getField(row, column.Key)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 163, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 164, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -439,7 +440,7 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = components.Input(props.InputProps{
+					templ_7745c5c3_Err = input.Input(props.InputProps{
 						Id:       fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridInputEditProps).Id)),
 						Typ:      column.EditOptions.EditProps.(props.GridInputEditProps).Typ,
 						Name:     column.EditOptions.EditProps.(props.GridInputEditProps).Name, //make pluck or default here
@@ -459,7 +460,7 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = components.Select(props.SelectProps{
+					templ_7745c5c3_Err = dropdown.Select(props.SelectProps{
 						Id:    fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridSelectEditProps).Id)),
 						Name:  column.EditOptions.EditProps.(props.GridSelectEditProps).Name,
 						Class: column.EditOptions.EditProps.(props.GridSelectEditProps).Class,
@@ -481,7 +482,7 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = components.MultiSelect(
+					templ_7745c5c3_Err = dropdown.MultiSelect(
 						column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Options,
 						getMultiSelectOptions(getField(row, column.Key).([]string)),
 						column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Name,
@@ -548,7 +549,7 @@ func gridUtils(title string, subtitle string, description string) templ.Componen
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 248, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 249, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -571,7 +572,7 @@ func gridUtils(title string, subtitle string, description string) templ.Componen
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/grid/grid.templ`, Line: 253, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/grid/grid.templ`, Line: 254, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -663,7 +664,7 @@ func formModal(label string, name string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:       label,
 			Typ:      props.InputTypeText,
 			Name:     name,

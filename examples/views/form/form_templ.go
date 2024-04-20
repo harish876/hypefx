@@ -11,8 +11,10 @@ import "io"
 import "bytes"
 
 import "github.com/harish876/hypefx/examples/views/layout"
-import "github.com/harish876/hypefx/components"
+import "github.com/harish876/hypefx/components/input"
 import "github.com/harish876/hypefx/components/props"
+import "github.com/harish876/hypefx/components/dropdown"
+import "github.com/harish876/hypefx/components/notification"
 
 func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showToast bool, toastMessage string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -31,7 +33,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:       "FirstName",
 			Typ:      props.InputTypeText,
 			Name:     "first_name",
@@ -47,7 +49,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:    "LastName",
 			Typ:   props.InputTypeText,
 			Name:  "last_name",
@@ -62,7 +64,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:       "Email",
 			Typ:      props.InputTypeEmail,
 			Name:     "email",
@@ -79,7 +81,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 			return templ_7745c5c3_Err
 		}
 		if formErrors.Password == "" {
-			templ_7745c5c3_Err = components.Input(props.InputProps{
+			templ_7745c5c3_Err = input.Input(props.InputProps{
 				Id:       "Password",
 				Typ:      props.InputTypePassword,
 				Name:     "password",
@@ -96,7 +98,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = components.Input(props.InputProps{
+			templ_7745c5c3_Err = input.Input(props.InputProps{
 				Id:       "Password",
 				Typ:      props.InputTypePassword,
 				Name:     "password",
@@ -115,7 +117,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(formErrors.Password)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/form/form.templ`, Line: 70, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/form/form.templ`, Line: 72, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -130,7 +132,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:      "PasswordConfirmation",
 			Typ:     props.InputTypePassword,
 			Name:    "password_confirmation",
@@ -145,7 +147,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.MultiSelect([]props.SelectOption{
+		templ_7745c5c3_Err = dropdown.MultiSelect([]props.SelectOption{
 			{Label: "Magenta", Value: "#ff00ff"},
 			{Label: "Blue", Value: "#0000FF"},
 			{Label: "Green", Value: "#00FF00"},
@@ -165,7 +167,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(props.InputProps{
 			Id:    "MarketingAccept",
 			Typ:   props.InputTypeCheckbox,
 			Name:  "marketing_accept",
@@ -180,7 +182,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 			return templ_7745c5c3_Err
 		}
 		if showToast {
-			templ_7745c5c3_Err = components.Notification("Success", toastMessage, components.NOTIFICATION_SUCCCESS).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = notification.Notification("Success", toastMessage, notification.NOTIFICATION_SUCCCESS).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

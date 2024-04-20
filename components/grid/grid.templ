@@ -3,11 +3,12 @@ package grid
 import (
 	"fmt"
 	"github.com/harish876/hypefx/examples/views/layout"
-	"github.com/harish876/hypefx/components"
 	"github.com/harish876/hypefx/examples/utils"
 	"github.com/harish876/hypefx/components/props"
 	"strconv"
 	"reflect"
+	"github.com/harish876/hypefx/components/input"
+	"github.com/harish876/hypefx/components/dropdown"
 )
 
 templ gridPagination(pageOptions props.GridPagination) {
@@ -180,7 +181,7 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 			if column.Editable {
 				if column.EditOptions.EditType == props.EditInput {
 					<td class="px-4 py-4 text-sm text-gray-500 :text-gray-300 whitespace-nowrap">
-						@components.Input(props.InputProps{
+						@input.Input(props.InputProps{
 							Id:       fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridInputEditProps).Id)),
 							Typ:      column.EditOptions.EditProps.(props.GridInputEditProps).Typ,
 							Name:     column.EditOptions.EditProps.(props.GridInputEditProps).Name, //make pluck or default here
@@ -193,7 +194,7 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 					<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
 						<div class="inline-flex items-center rounded-full gap-x-2 :bg-gray-800">
 							<h2 class="text-sm font-normal text-emerald-500">
-								@components.Select(props.SelectProps{
+								@dropdown.Select(props.SelectProps{
 									Id:    fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridSelectEditProps).Id)),
 									Name:  column.EditOptions.EditProps.(props.GridSelectEditProps).Name,
 									Class: column.EditOptions.EditProps.(props.GridSelectEditProps).Class,
@@ -208,7 +209,7 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 					</td>
 				} else if column.EditOptions.EditType == props.EditMultiSelect {
 					<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-						@components.MultiSelect(
+						@dropdown.MultiSelect(
 							column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Options,
 							getMultiSelectOptions(getField(row, column.Key).([]string)),
 							column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Name,
@@ -354,7 +355,7 @@ templ formModal(label string, name string) {
 				<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 				<div class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl rtl:text-right services:bg-gray-900 sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
 					<div class="mt-4">
-						@components.Input(props.InputProps{
+						@input.Input(props.InputProps{
 							Id:       label,
 							Typ:      props.InputTypeText,
 							Name:     name,

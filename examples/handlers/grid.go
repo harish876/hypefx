@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/harish876/hypefx/components/grid"
 	"github.com/harish876/hypefx/components/props"
 	"github.com/harish876/hypefx/examples/db"
 	"github.com/harish876/hypefx/examples/services"
-	"github.com/harish876/hypefx/examples/views/grid"
 	"github.com/labstack/echo/v4"
 )
 
