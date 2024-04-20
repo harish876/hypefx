@@ -1,0 +1,16 @@
+package components
+
+import "github.com/harish876/hypefx/components/props"
+
+templ Select(selectProps props.SelectProps) {
+	<select
+		name={ selectProps.Name }
+		id={ selectProps.Id }
+		class="mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm"
+	>
+		<option value={ selectProps.DefaultValue.Label } disabled selected>{ selectProps.DefaultValue.Value }</option>
+		for _,option := range selectProps.Options {
+			<option value={ option.Value }>{ option.Label }</option>
+		}
+	</select>
+}

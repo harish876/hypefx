@@ -1,0 +1,36 @@
+package components
+
+const (
+	NOTIFICATION_SUCCCESS = "success"
+)
+
+templ Notification(title string, message string, icon string) {
+	<div id="toastContainer" style="display: none;">
+		<span
+			id="toastMessage"
+			data-title={ title }
+			data-message={ message }
+			data-icon={ icon }
+		></span>
+	</div>
+	<script lang="js">
+	    const toastTitle = document.getElementById('toastMessage').dataset.title;
+	    const toastMessage = document.getElementById('toastMessage').dataset.message;
+	    const toastIcon = document.getElementById('toastMessage').dataset.icon;
+	    showNotification(toastTitle,toastMessage,toastIcon);
+	    function showNotification(title,message,icon) {
+	        Swal.fire({
+	            position: 'top-end',
+	            icon: toastIcon,
+	            title: toastTitle,
+	            text: toastMessage,
+	            showConfirmButton: false,
+	            timer: 3000,
+	            customClass: {
+	                popup: 'bg-green-50 p-4 rounded-md text-sm text-gray-800',
+	                title: 'text-md',
+	            }
+	        });
+	    }
+	</script>
+}

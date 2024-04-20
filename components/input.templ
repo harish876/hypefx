@@ -1,0 +1,40 @@
+package components
+
+import "github.com/harish876/hypefx/components/props"
+
+templ Input(props props.InputProps) {
+	<label for={ props.Id } class="text-sm font-medium text-gray-700 flex gap-2">
+		{ props.Label }
+	</label>
+	if props.Required && props.Pattern == "" {
+		<input
+			type={ props.Typ }
+			id={ props.Id }
+			name={ props.Name }
+			class={ props.Class }
+			required
+			placeholder=" "
+			value={ props.Value }
+		/>
+	} else if props.Required && props.Pattern != "" {
+		<input
+			type={ props.Typ }
+			id={ props.Id }
+			name={ props.Name }
+			class={ props.Class }
+			required
+			placeholder=" "
+			pattern={ props.Pattern }
+			value={ props.Value }
+		/>
+	} else {
+		<input
+			type={ props.Typ }
+			id={ props.Id }
+			name={ props.Name }
+			class={ props.Class }
+			placeholder=" "
+			value={ props.Value }
+		/>
+	}
+}

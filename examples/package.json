@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "start:tailwind": "npx tailwindcss -i ./input.css -o ./assets/css/styles.css --watch",
+    "start:go": "air -c ./.air.toml",
+    "start": "concurrently \"npm run start:tailwind\" \"npm run start:go\""
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "concurrently": "^8.2.2",
+    "daisyui": "^4.7.2",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "preline": "^2.0.3"
+  }
+}
