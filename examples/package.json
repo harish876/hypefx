@@ -2,7 +2,7 @@
   "scripts": {
     "start:tailwind": "npx tailwindcss -i ./input.css -o ./assets/css/styles.css --watch",
     "start:go": "air -c ./.air.toml",
-    "start": "concurrently \"npm run start:tailwind\" \"npm run start:go\""
+    "start": "concurrently \"npm run start:go\""
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
