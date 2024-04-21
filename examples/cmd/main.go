@@ -10,7 +10,6 @@ func main() {
 	app := echo.New()
 	app.Static("/", "assets")
 
-	// Set custom HTTP error handler for 404 Not Found
 	app.HTTPErrorHandler = handlers.NotFoundErrorHandler
 
 	routes.RegisterHomeRoutes(app)
