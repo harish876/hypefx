@@ -1,4 +1,4 @@
-# HypeFx - Framework to create SPA's using Go, HTMX and Templ, the GOAT of all stacks. 
+# HypeFx - Framework to create SPA's using Go, HTMX and Templ, the Lebron James of all stacks. 
 CLI Tool providing a project scaffolding and a compact component library for apps written using Go, HTMX and Templ. 
 
 ## Table of Contents
