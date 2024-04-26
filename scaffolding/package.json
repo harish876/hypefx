@@ -1,7 +1,7 @@
 {
-  "name": "scaffolding",
+  "name": "github.com/harish876/hypefx/scaffolding",
   "version": "1.0.0",
-  "description": "scaffolding for a project using htmx, templ and any web framework like echo.",
+  "description": "github.com/harish876/hypefx/scaffolding for a project using htmx, templ and any web framework like echo.",
   "main": "tailwind.config.js",
   "scripts": {
     "start:tailwind": "npx tailwindcss -i ./input.css -o ./assets/css/styles.css --watch",
