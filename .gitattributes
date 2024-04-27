@@ -1,0 +1,2 @@
+* linguist-vendored
+*.templ linguist-vendored=false
