@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/harish876/hypefx/scaffolding/handlers"
+
 	"github.com/labstack/echo/v4"
 )
 

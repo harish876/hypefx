@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/harish876/hypefx/scaffolding/handlers"
 	"github.com/harish876/hypefx/scaffolding/routes"
+
 	"github.com/labstack/echo/v4"
 )
 
