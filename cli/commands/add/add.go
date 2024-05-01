@@ -13,11 +13,14 @@ import (
 )
 
 var (
-	BASE_PATH = "github.com/harish876/hypefx"
+	BASE_PATH    = "github.com/harish876/hypefx"
+	PROJECT_NAME string
 )
 
 func Add(cmd *cobra.Command, args []string, components embed.FS) {
 	componentName := args[0]
+	projectName := args[1]
+	PROJECT_NAME = projectName
 	currDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error Getting the current directory: ", err)
@@ -75,6 +78,6 @@ func copyFile(src, dst string, components embed.FS) error {
 		return err
 	}
 	// TODO: make this better -> hardcoded
-	utils.ReplaceFileContent(dst, BASE_PATH, "foobar")
+	utils.ReplaceFileContent(dst, BASE_PATH, PROJECT_NAME)
 	return nil
 }

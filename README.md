@@ -23,6 +23,8 @@ This project is aimed at proividing a project scaffolding structure and a lightw
 4. Run `go mod tidy` to install all accompanying third party dependencies.
 5. Now run `npm install` or `npm i` command to install dev dependencies for your tailwind and other HMR utilities.
 6. Run `npm run start` command to start the dev server for your project and get started with your first Golang + HTMX + Templ project.
+7. To add the component library and make it your own use the following command `hypefx add grid`.
+8. Now a component can depend on mutiple other components, hence onus on you to currently add all dependent components. I will make some sort of recursive dependency resolver soon.
 
 ## Dependecies Used
 1. Uses Echo for HTTP Routing, Route grouping , Template Rendering etc.

@@ -1,5 +1,4 @@
 # Usage
-
 1. If you dont have the hypefx tool installed, then run the following command `go install github.com/harish876/hypefx@latest`.
 2. Run the `go mod init 'project_name'` command to initialize a new golang project.
 3. Now run `hypefx generate 'project_name'` generated from the first command to define your project workspace or module.
@@ -10,5 +9,4 @@
 
 
 # Issue or Errors.
-
 1. If you encounter an error, please file an issue here at github.com/harish876/hypefx or even better a pull request if you are able to diagnose and fix the error.

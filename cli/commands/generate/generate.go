@@ -7,13 +7,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/harish876/hypefx/cli/commands"
 	"github.com/harish876/hypefx/cli/commands/generate/utils"
 	"github.com/spf13/cobra"
 )
 
 var (
-	BASE_PATH = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
+	BASE_PATH    = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
+	PROJECT_NAME string
 )
 
 //go:embed scaffolding/*
@@ -25,7 +25,7 @@ func Generate(cmd *cobra.Command, args []string) {
 		fmt.Println("Please specify a project name. This would be the 'go mod init' module name")
 		os.Exit(1)
 	}
-	commands.PROJECT_NAME = projectName
+	PROJECT_NAME = projectName
 	err := copyDirectory("scaffolding", ".")
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -78,10 +78,10 @@ func copyFile(src, dst string) error {
 		return err
 	}
 	// TODO: make this better
-	if commands.PROJECT_NAME == "" {
+	if PROJECT_NAME == "" {
 		fmt.Println("Project Name is required. It is not set")
 		os.Exit(1)
 	}
-	utils.ReplaceFileContent(dst, BASE_PATH, commands.PROJECT_NAME)
+	utils.ReplaceFileContent(dst, BASE_PATH, PROJECT_NAME)
 	return nil
 }

@@ -23,7 +23,7 @@ func main() {
 	}
 
 	var generateCmd = &cobra.Command{
-		Use:     "generate [project_name]",
+		Use:     "generate [project_name/module_name]",
 		Short:   "Generates a new HypeFX Project Structure",
 		Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
 		Args:    cobra.ExactArgs(1), // Require exactly one argument (project_name)
@@ -32,11 +32,11 @@ func main() {
 	}
 
 	var addCmd = &cobra.Command{
-		Use:     "add [compoent_name]",
+		Use:     "add [compoent_name] [project_name/module_name]",
 		Short:   "Add a new component from the component library",
 		Long:    `Add a new component from the component library , and customise it as per your liking`,
-		Args:    cobra.ExactArgs(1), // Require exactly one argument (component_name)
-		Example: "hype add grid",
+		Args:    cobra.ExactArgs(2), // Require exactly two arguments (component_name, module_name)
+		Example: "hype add grid foobar",
 		Run: func(cmd *cobra.Command, args []string) {
 			add.Add(cmd, args, components)
 		},
