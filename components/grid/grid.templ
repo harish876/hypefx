@@ -139,7 +139,7 @@ templ renderRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridCol
 	</tr>
 }
 
-// this is the only section which is hard coded
+// this is the only section which is hard coded for now. Incomplete featureset
 templ rowRenderer(row any, column GridColumn) {
 	switch column.Renderer {
 		case "name":

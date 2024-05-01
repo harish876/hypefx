@@ -1,6 +1,8 @@
 package grid
 
-import "github.com/harish876/hypefx/components/dropdown"
+import (
+	"github.com/harish876/hypefx/components/dropdown"
+)
 
 const (
 	Integer = iota
