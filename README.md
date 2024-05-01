@@ -4,6 +4,7 @@ CLI Tool providing a project scaffolding and a compact component library for app
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
+- [Usage](#usage)
 - [Dependencies Used](#dependencies-used)
 - [Todos and Future Plans](#todos-and-future-plans)
 
@@ -14,6 +15,10 @@ This project is aimed at proividing a project scaffolding structure and a lightw
  1. CLI Tool out of the box to create a projects scaffolding.
  2. Dev Features like Hot Module Reloading, Routing, Template Rendering , Template Generation all covered by the CLI.
  3. Comes bundled with a tailwind config file to add supporting styles to the application.
+
+
+## Usage
+1. 
 
 ## Dependecies Used
 1. Uses Echo for HTTP Routing, Route grouping , Template Rendering etc.

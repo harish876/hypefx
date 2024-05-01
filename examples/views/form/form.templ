@@ -14,9 +14,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 		novalidate
 	>
 		<div class="col-span-6 sm:col-span-3">
-			@input.Input(props.InputProps{
+			@input.Input(input.InputProps{
 				Id:       "FirstName",
-				Typ:      props.InputTypeText,
+				Typ:      input.InputTypeText,
 				Name:     "first_name",
 				Label:    "First Name",
 				Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -25,9 +25,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 			})
 		</div>
 		<div class="col-span-6 sm:col-span-3">
-			@input.Input(props.InputProps{
+			@input.Input(input.InputProps{
 				Id:    "LastName",
-				Typ:   props.InputTypeText,
+				Typ:   input.InputTypeText,
 				Name:  "last_name",
 				Label: "Last Name",
 				Class: "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -35,9 +35,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 			})
 		</div>
 		<div class="col-span-6">
-			@input.Input(props.InputProps{
+			@input.Input(input.InputProps{
 				Id:       "Email",
-				Typ:      props.InputTypeEmail,
+				Typ:      input.InputTypeEmail,
 				Name:     "email",
 				Label:    "Email",
 				Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -47,9 +47,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 		</div>
 		<div class="col-span-6 sm:col-span-3">
 			if formErrors.Password == "" {
-				@input.Input(props.InputProps{
+				@input.Input(input.InputProps{
 					Id:       "Password",
-					Typ:      props.InputTypePassword,
+					Typ:      input.InputTypePassword,
 					Name:     "password",
 					Label:    "Password",
 					Required: true,
@@ -60,9 +60,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 					Password must be at least 7 characters long
 				</span>
 			} else {
-				@input.Input(props.InputProps{
+				@input.Input(input.InputProps{
 					Id:       "Password",
-					Typ:      props.InputTypePassword,
+					Typ:      input.InputTypePassword,
 					Name:     "password",
 					Label:    "Password",
 					Required: true,
@@ -75,9 +75,9 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 			}
 		</div>
 		<div class="col-span-6 sm:col-span-3">
-			@input.Input(props.InputProps{
+			@input.Input(input.InputProps{
 				Id:      "PasswordConfirmation",
-				Typ:     props.InputTypePassword,
+				Typ:     input.InputTypePassword,
 				Name:    "password_confirmation",
 				Label:   "Password Confirmation",
 				Class:   "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -85,7 +85,7 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 			})
 		</div>
 		<div class="col-span-6">
-			@dropdown.MultiSelect([]props.SelectOption{
+			@dropdown.MultiSelect([]dropdown.SelectOption{
 				{Label: "Magenta", Value: "#ff00ff"},
 				{Label: "Blue", Value: "#0000FF"},
 				{Label: "Green", Value: "#00FF00"},
@@ -93,16 +93,16 @@ templ exampleForm(formValues props.FormValues, formErrors props.FormErrors, show
 				{Label: "Purple", Value: "#FF000"},
 				{Label: "Cyan", Value: "#FF00"},
 			},
-				[]props.SelectOption{
+				[]dropdown.SelectOption{
 					{Label: "Magenta", Value: "#ff00ff"},
 				},
 				"colors",
 			)
 		</div>
 		<div class="col-span-6">
-			@input.Input(props.InputProps{
+			@input.Input(input.InputProps{
 				Id:    "MarketingAccept",
-				Typ:   props.InputTypeCheckbox,
+				Typ:   input.InputTypeCheckbox,
 				Name:  "marketing_accept",
 				Label: "Marketing Accept",
 				Class: "size-5 rounded-md border-gray-200 bg-white shadow-sm",

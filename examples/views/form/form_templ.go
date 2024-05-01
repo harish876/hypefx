@@ -33,9 +33,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:       "FirstName",
-			Typ:      props.InputTypeText,
+			Typ:      input.InputTypeText,
 			Name:     "first_name",
 			Label:    "First Name",
 			Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -49,9 +49,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:    "LastName",
-			Typ:   props.InputTypeText,
+			Typ:   input.InputTypeText,
 			Name:  "last_name",
 			Label: "Last Name",
 			Class: "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -64,9 +64,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:       "Email",
-			Typ:      props.InputTypeEmail,
+			Typ:      input.InputTypeEmail,
 			Name:     "email",
 			Label:    "Email",
 			Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -81,9 +81,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 			return templ_7745c5c3_Err
 		}
 		if formErrors.Password == "" {
-			templ_7745c5c3_Err = input.Input(props.InputProps{
+			templ_7745c5c3_Err = input.Input(input.InputProps{
 				Id:       "Password",
-				Typ:      props.InputTypePassword,
+				Typ:      input.InputTypePassword,
 				Name:     "password",
 				Label:    "Password",
 				Required: true,
@@ -98,9 +98,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = input.Input(props.InputProps{
+			templ_7745c5c3_Err = input.Input(input.InputProps{
 				Id:       "Password",
-				Typ:      props.InputTypePassword,
+				Typ:      input.InputTypePassword,
 				Name:     "password",
 				Label:    "Password",
 				Required: true,
@@ -132,9 +132,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:      "PasswordConfirmation",
-			Typ:     props.InputTypePassword,
+			Typ:     input.InputTypePassword,
 			Name:    "password_confirmation",
 			Label:   "Password Confirmation",
 			Class:   "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -147,7 +147,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = dropdown.MultiSelect([]props.SelectOption{
+		templ_7745c5c3_Err = dropdown.MultiSelect([]dropdown.SelectOption{
 			{Label: "Magenta", Value: "#ff00ff"},
 			{Label: "Blue", Value: "#0000FF"},
 			{Label: "Green", Value: "#00FF00"},
@@ -155,7 +155,7 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 			{Label: "Purple", Value: "#FF000"},
 			{Label: "Cyan", Value: "#FF00"},
 		},
-			[]props.SelectOption{
+			[]dropdown.SelectOption{
 				{Label: "Magenta", Value: "#ff00ff"},
 			},
 			"colors",
@@ -167,9 +167,9 @@ func exampleForm(formValues props.FormValues, formErrors props.FormErrors, showT
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:    "MarketingAccept",
-			Typ:   props.InputTypeCheckbox,
+			Typ:   input.InputTypeCheckbox,
 			Name:  "marketing_accept",
 			Label: "Marketing Accept",
 			Class: "size-5 rounded-md border-gray-200 bg-white shadow-sm",

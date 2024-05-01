@@ -1,12 +1,11 @@
 package dropdown
 
 import (
-	"github.com/harish876/hypefx/components/props"
 	"fmt"
 	"encoding/json"
 )
 
-func optionsJSON(options []props.SelectOption) string {
+func optionsJSON(options []SelectOption) string {
 	bytes, err := json.Marshal(options)
 	if err != nil {
 		return ""
@@ -14,7 +13,7 @@ func optionsJSON(options []props.SelectOption) string {
 	return string(bytes)
 }
 
-templ MultiSelect(options []props.SelectOption, defaultSelectedOptions []props.SelectOption, name string) {
+templ MultiSelect(options []SelectOption, defaultSelectedOptions []SelectOption, name string) {
 	<div x-data={ fmt.Sprintf("{ isMultiSelectOpen: false, selectedOptions: [] }") } @click.away="isMultiSelectOpen = false">
 		<section class="flex flex-col w-full" id="multiSelect">
 			<div class="w-full py-2">

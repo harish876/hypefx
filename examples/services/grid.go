@@ -1,20 +1,19 @@
 package services
 
 import (
-	"github.com/harish876/hypefx/components/props"
 	"github.com/harish876/hypefx/examples/db"
 )
 
-func FilterById(data []props.GridDataRow, id string) props.GridDataRow {
+func FilterById(data []db.GridDataRow, id string) db.GridDataRow {
 	for _, row := range data {
 		if row.Id == id {
 			return row
 		}
 	}
-	return props.GridDataRow{}
+	return db.GridDataRow{}
 }
 
-func UpdateById(data []props.GridDataRow, id string, newData props.GridDataRow) props.GridDataRow {
+func UpdateById(data []db.GridDataRow, id string, newData db.GridDataRow) db.GridDataRow {
 	for i, row := range data {
 		if row.Id == id {
 			data[i].Status = newData.Status
@@ -22,11 +21,11 @@ func UpdateById(data []props.GridDataRow, id string, newData props.GridDataRow) 
 			return data[i]
 		}
 	}
-	return props.GridDataRow{}
+	return db.GridDataRow{}
 }
 
 func DeleteById(id string) {
-	var updatedData []props.GridDataRow
+	var updatedData []db.GridDataRow
 	for _, row := range db.GridData {
 		if row.Id != id {
 			updatedData = append(updatedData, row)

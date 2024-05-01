@@ -14,14 +14,15 @@ import (
 	"fmt"
 	"github.com/harish876/hypefx/components/dropdown"
 	"github.com/harish876/hypefx/components/input"
-	"github.com/harish876/hypefx/components/props"
+	"github.com/harish876/hypefx/examples/db"
 	"github.com/harish876/hypefx/examples/utils"
 	"github.com/harish876/hypefx/examples/views/layout"
-	"reflect"
 	"strconv"
 )
 
-func gridPagination(pageOptions props.GridPagination) templ.Component {
+type GridColumnAlias = GridColumn
+
+func Grid[D db.GridDataRow](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -32,6 +33,95 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
 		if templ_7745c5c3_Var1 == nil {
 			templ_7745c5c3_Var1 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Var2 := templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+			if !templ_7745c5c3_IsBuffer {
+				templ_7745c5c3_Buffer = templ.GetBuffer()
+				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+			}
+			templ_7745c5c3_Err = grid(gridCtx, gridData, pageOptions).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if !templ_7745c5c3_IsBuffer {
+				_, templ_7745c5c3_Err = io.Copy(templ_7745c5c3_W, templ_7745c5c3_Buffer)
+			}
+			return templ_7745c5c3_Err
+		})
+		templ_7745c5c3_Err = layout.Base(gridCtx.Title).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func RenderEditableRow(gridCtx *GridContext[GridColumn], columns []GridColumn, row interface{}) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = renderEditableRow(columns, row, gridCtx).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func RenderRow(gridCtx *GridContext[GridColumn], columns []GridColumn, row interface{}) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = renderRow(columns, row, gridCtx).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+/* -------------------------------- PRIVATE FUNCTIONS -------------------------------- */
+
+func gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"flex justify-between my-4\"><div class=\"flex justify-center\">")
@@ -199,7 +289,7 @@ func gridPagination(pageOptions props.GridPagination) templ.Component {
 	})
 }
 
-func gridHeader(columns []props.GridColumn) templ.Component {
+func gridHeader(columns []GridColumn) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -246,7 +336,7 @@ func gridHeader(columns []props.GridColumn) templ.Component {
 	})
 }
 
-func renderGridRow[D any](columns []props.GridColumn, row D) templ.Component {
+func renderRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridColumn]) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -306,7 +396,8 @@ func renderGridRow[D any](columns []props.GridColumn, row D) templ.Component {
 	})
 }
 
-func rowRenderer(row any, column props.GridColumn) templ.Component {
+// this is the only section which is hard coded
+func rowRenderer(row any, column GridColumn) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -370,7 +461,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		case "badges":
-			if arr, ok := getField(row, column.Key).([]string); ok {
+			if arr, ok := GetField(row, column.Key).([]string); ok {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<td class=\"px-4 py-4 text-sm whitespace-nowrap\"><div class=\"flex items-center gap-x-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -443,15 +534,7 @@ func rowRenderer(row any, column props.GridColumn) templ.Component {
 	})
 }
 
-func getMultiSelectOptions(fields []string) []props.SelectOption {
-	var options []props.SelectOption
-	for _, field := range fields {
-		options = append(options, props.SelectOption{Label: field, Value: field})
-	}
-	return options
-}
-
-func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Component {
+func renderEditableRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridColumn]) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -476,12 +559,12 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = input.Input(props.InputProps{
-						Id:       fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridInputEditProps).Id)),
-						Typ:      column.EditOptions.EditProps.(props.GridInputEditProps).Typ,
-						Name:     column.EditOptions.EditProps.(props.GridInputEditProps).Name, //make pluck or default here
-						Value:    fmt.Sprintf("%s", getField(row, column.Key)),
-						Class:    column.EditOptions.EditProps.(props.GridInputEditProps).Class,
+					templ_7745c5c3_Err = input.Input(input.InputProps{
+						Id:       fmt.Sprintf("%s", GetField(row, column.EditOptions.EditProps.(GridInputEditProps).Id)),
+						Typ:      column.EditOptions.EditProps.(GridInputEditProps).Typ,
+						Name:     column.EditOptions.EditProps.(GridInputEditProps).Name, //make pluck or default here
+						Value:    fmt.Sprintf("%s", GetField(row, column.Key)),
+						Class:    column.EditOptions.EditProps.(GridInputEditProps).Class,
 						Required: true,
 					}).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
@@ -496,15 +579,15 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = dropdown.Select(props.SelectProps{
-						Id:    fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridSelectEditProps).Id)),
-						Name:  column.EditOptions.EditProps.(props.GridSelectEditProps).Name,
-						Class: column.EditOptions.EditProps.(props.GridSelectEditProps).Class,
-						DefaultValue: props.SelectOption{
-							Label: utils.StartCase(fmt.Sprintf("%s", getField(row, column.Key))),
-							Value: fmt.Sprintf("%s", getField(row, column.Key)),
+					templ_7745c5c3_Err = dropdown.Select(dropdown.SelectProps{
+						Id:    fmt.Sprintf("%s", GetField(row, column.EditOptions.EditProps.(GridSelectEditProps).Id)),
+						Name:  column.EditOptions.EditProps.(GridSelectEditProps).Name,
+						Class: column.EditOptions.EditProps.(GridSelectEditProps).Class,
+						DefaultValue: dropdown.SelectOption{
+							Label: utils.StartCase(fmt.Sprintf("%s", GetField(row, column.Key))),
+							Value: fmt.Sprintf("%s", GetField(row, column.Key)),
 						},
-						Options: column.EditOptions.EditProps.(props.GridSelectEditProps).Options,
+						Options: column.EditOptions.EditProps.(GridSelectEditProps).Options,
 					}).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
@@ -563,7 +646,7 @@ func renderEditableGridRow[D any](columns []props.GridColumn, row D) templ.Compo
 	})
 }
 
-func gridUtils(title string, subtitle string, description string) templ.Component {
+func gridUtils(title, subtitle, description, url string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -594,7 +677,20 @@ func gridUtils(title string, subtitle string, description string) templ.Componen
 			return templ_7745c5c3_Err
 		}
 		if subtitle != "" {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span class=\"px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full :bg-gray-800 :text-blue-400\">240 vendors</span>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span class=\"px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full :bg-gray-800 :text-blue-400\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(subtitle)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 261, Col: 114}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -623,7 +719,7 @@ func gridUtils(title string, subtitle string, description string) templ.Componen
 	})
 }
 
-func grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, pageOptions props.GridPagination) templ.Component {
+func grid[D any](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -636,11 +732,11 @@ func grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, page
 			templ_7745c5c3_Var29 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"container px-4 mx-auto my-4\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"container px-4 mx-auto my-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = gridUtils("Users", "", "Example Gird with filters, pagination, export etc...").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = gridUtils(gridCtx.Title, gridCtx.Subheading, gridCtx.Description, gridCtx.Url).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -657,7 +753,7 @@ func grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, page
 			return templ_7745c5c3_Err
 		}
 		for _, row := range gridData {
-			templ_7745c5c3_Err = renderGridRow(gridCtx.Columns, row).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = renderRow(gridCtx.Columns, row, gridCtx).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -666,7 +762,7 @@ func grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, page
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = gridPagination(pageOptions).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = gridPagination(gridCtx, pageOptions).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -698,9 +794,9 @@ func formModal(label string, name string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = input.Input(props.InputProps{
+		templ_7745c5c3_Err = input.Input(input.InputProps{
 			Id:       label,
-			Typ:      props.InputTypeText,
+			Typ:      input.InputTypeText,
 			Name:     name,
 			Label:    label,
 			Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",

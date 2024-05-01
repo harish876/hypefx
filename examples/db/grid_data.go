@@ -1,10 +1,18 @@
 package db
 
-import "github.com/harish876/hypefx/components/props"
-
 // TODO: PUT SQL Lite Enginer here
 
-var GridData = props.GridData{
+type GridDataRow struct {
+	Id       string
+	Name     string
+	Status   string
+	Position string
+	Email    string
+	Badges   []string
+	Img      string
+}
+
+var GridData = []GridDataRow{
 	{
 		Id:       "authurmelo",
 		Name:     "Arthur Melo",

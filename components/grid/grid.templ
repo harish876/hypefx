@@ -4,19 +4,36 @@ import (
 	"fmt"
 	"github.com/harish876/hypefx/examples/views/layout"
 	"github.com/harish876/hypefx/examples/utils"
-	"github.com/harish876/hypefx/components/props"
 	"strconv"
-	"reflect"
 	"github.com/harish876/hypefx/components/input"
 	"github.com/harish876/hypefx/components/dropdown"
+	"github.com/harish876/hypefx/examples/db"
 )
 
-templ gridPagination(pageOptions props.GridPagination) {
+type GridColumnAlias = GridColumn
+
+templ Grid[D db.GridDataRow](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) {
+	@layout.Base(gridCtx.Title) {
+		@grid(gridCtx, gridData, pageOptions)
+	}
+}
+
+templ RenderEditableRow(gridCtx *GridContext[GridColumn], columns []GridColumn, row interface{}) {
+	@renderEditableRow(columns, row, gridCtx)
+}
+
+templ RenderRow(gridCtx *GridContext[GridColumn], columns []GridColumn, row interface{}) {
+	@renderRow(columns, row, gridCtx)
+}
+
+/* -------------------------------- PRIVATE FUNCTIONS -------------------------------- */
+
+templ gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination) {
 	<section class="flex justify-between my-4">
 		<div class="flex justify-center">
 			if pageOptions.Current > 1 {
 				<div
-					hx-get={ fmt.Sprintf("/grid?page=%d&limit=%d", pageOptions.Current-1, pageOptions.Limit) }
+					hx-get={ fmt.Sprintf("%s?page=%d&limit=%d", gridCtx.Url, pageOptions.Current-1, pageOptions.Limit) }
 					hx-target="body"
 					class="cursor-pointer px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md :bg-gray-800 :text-gray-200 hover:bg-blue-500 :hover:bg-blue-500 hover:text-white :hover:text-gray-200"
 				>
@@ -34,7 +51,7 @@ templ gridPagination(pageOptions props.GridPagination) {
 				for page := 1; page <= pageOptions.TotalPages; page++ {
 					if page == pageOptions.Current {
 						<div
-							hx-get={ fmt.Sprintf("/grid?page=%d&limit=%d", page, pageOptions.Limit) }
+							hx-get={ fmt.Sprintf("%s?page=%d&limit=%d", gridCtx.Url, page, pageOptions.Limit) }
 							hx-target="body"
 							class="hidden px-4 py-2 mx-1 text-gray-200 transition-colors duration-300 transform rounded-md sm:inline :bg-gray-800 :text-gray-200 bg-blue-500 :hover:bg-white :hover:bg-blue-500 hover:text-blue :hover:text-gray-700"
 						>
@@ -42,7 +59,7 @@ templ gridPagination(pageOptions props.GridPagination) {
 						</div>
 					} else {
 						<div
-							hx-get={ fmt.Sprintf("/grid?page=%d&limit=%d", page, pageOptions.Limit) }
+							hx-get={ fmt.Sprintf("%s?page=%d&limit=%d", gridCtx.Url, page, pageOptions.Limit) }
 							hx-target="body"
 							class="hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline :bg-gray-800 :text-gray-200 hover:bg-blue-500 :hover:bg-blue-500 hover:text-white :hover:text-gray-200"
 						>
@@ -53,7 +70,7 @@ templ gridPagination(pageOptions props.GridPagination) {
 			</div>
 			if pageOptions.Current < pageOptions.TotalPages {
 				<div
-					hx-get={ fmt.Sprintf("/grid?page=%d&limit=%d", pageOptions.Current+1, pageOptions.Limit) }
+					hx-get={ fmt.Sprintf("%s?page=%d&limit=%d", gridCtx.Url, pageOptions.Current+1, pageOptions.Limit) }
 					hx-target="body"
 					class="cursor-pointer px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md :bg-gray-800 :text-gray-200 hover:bg-blue-500 :hover:bg-blue-500 hover:text-white :hover:text-gray-200"
 				>
@@ -74,7 +91,7 @@ templ gridPagination(pageOptions props.GridPagination) {
 	</section>
 }
 
-templ gridHeader(columns []props.GridColumn) {
+templ gridHeader(columns []GridColumn) {
 	<thead class="bg-gray-50 :bg-gray-800">
 		<tr>
 			for _,column := range columns {
@@ -91,7 +108,7 @@ templ gridHeader(columns []props.GridColumn) {
 	</thead>
 }
 
-templ renderGridRow[D any](columns []props.GridColumn, row D) {
+templ renderRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridColumn]) {
 	<tr class="w-full">
 		for _, column := range columns {
 			@rowRenderer(row, column)
@@ -101,7 +118,7 @@ templ renderGridRow[D any](columns []props.GridColumn, row D) {
 				<button
 					id="deleteRow"
 					class="text-gray-500 transition-colors duration-200 :hover:text-red-500 :text-gray-300 hover:text-red-500 focus:outline-none"
-					hx-delete={ fmt.Sprintf("/grid/%s", getField(row, "Id")) }
+					hx-delete={ fmt.Sprintf("%s/%s", gridCtx.Url, GetField(row, "Id")) }
 					hx-swap="outerHTML swap:1s"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -111,7 +128,7 @@ templ renderGridRow[D any](columns []props.GridColumn, row D) {
 				<button
 					id="updateRow"
 					class="text-gray-500 transition-colors duration-200 :hover:text-yellow-500 :text-gray-300 hover:text-yellow-500 focus:outline-none"
-					hx-get={ fmt.Sprintf("/grid/edit/%s", getField(row, "Id")) }
+					hx-get={ fmt.Sprintf("%s/edit/%s", gridCtx.Url, GetField(row, "Id")) }
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
@@ -122,7 +139,8 @@ templ renderGridRow[D any](columns []props.GridColumn, row D) {
 	</tr>
 }
 
-templ rowRenderer(row any, column props.GridColumn) {
+// this is the only section which is hard coded
+templ rowRenderer(row any, column GridColumn) {
 	switch column.Renderer {
 		case "name":
 			<td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -130,10 +148,10 @@ templ rowRenderer(row any, column props.GridColumn) {
 					<div class="flex items-center gap-x-2">
 						<div>
 							<h2 class="font-medium text-gray-800 :text-white ">
-								{ fmt.Sprintf("%s", getField(row,"Name")) }
+								{ fmt.Sprintf("%s", GetField(row,"Name")) }
 							</h2>
 							<p class="text-sm font-normal text-gray-600 :text-gray-400">
-								{ fmt.Sprintf("%s", getField(row,"Id")) }
+								{ fmt.Sprintf("%s", GetField(row,"Id")) }
 							</p>
 						</div>
 					</div>
@@ -143,11 +161,11 @@ templ rowRenderer(row any, column props.GridColumn) {
 			<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
 				<div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-emerald-100/60 :bg-gray-800">
 					<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-					<h2 class="text-sm font-normal text-emerald-500">{ utils.StartCase(fmt.Sprintf("%s", getField(row,column.Key))) }</h2>
+					<h2 class="text-sm font-normal text-emerald-500">{ utils.StartCase(fmt.Sprintf("%s", GetField(row,column.Key))) }</h2>
 				</div>
 			</td>
 		case "badges":
-			if arr, ok := getField(row,column.Key).([]string); ok {
+			if arr, ok := GetField(row,column.Key).([]string); ok {
 				<td class="px-4 py-4 text-sm whitespace-nowrap">
 					<div class="flex items-center gap-x-2">
 						for _,item := range arr {
@@ -157,62 +175,54 @@ templ rowRenderer(row any, column props.GridColumn) {
 				</td>
 			} else {
 				<td class="px-4 py-4 text-sm text-gray-500 :text-gray-300 whitespace-nowrap">
-					{ fmt.Sprintf("%s", getField(row,column.Key)) }
+					{ fmt.Sprintf("%s", GetField(row,column.Key)) }
 				</td>
 			}
 		default:
 			<td class="px-4 py-4 text-sm text-gray-500 :text-gray-300 whitespace-nowrap">
-				{ fmt.Sprintf("%s", getField(row,column.Key)) }
+				{ fmt.Sprintf("%s", GetField(row,column.Key)) }
 			</td>
 	}
 }
 
-func getMultiSelectOptions(fields []string) []props.SelectOption {
-	var options []props.SelectOption
-	for _, field := range fields {
-		options = append(options, props.SelectOption{Label: field, Value: field})
-	}
-	return options
-}
-
-templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
+templ renderEditableRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridColumn]) {
 	<tr class="editing" hx-trigger="cancel">
 		for _, column := range columns {
 			if column.Editable {
-				if column.EditOptions.EditType == props.EditInput {
+				if column.EditOptions.EditType == EditInput {
 					<td class="px-4 py-4 text-sm text-gray-500 :text-gray-300 whitespace-nowrap">
-						@input.Input(props.InputProps{
-							Id:       fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridInputEditProps).Id)),
-							Typ:      column.EditOptions.EditProps.(props.GridInputEditProps).Typ,
-							Name:     column.EditOptions.EditProps.(props.GridInputEditProps).Name, //make pluck or default here
-							Value:    fmt.Sprintf("%s", getField(row, column.Key)),
-							Class:    column.EditOptions.EditProps.(props.GridInputEditProps).Class,
+						@input.Input(input.InputProps{
+							Id:       fmt.Sprintf("%s", GetField(row, column.EditOptions.EditProps.(GridInputEditProps).Id)),
+							Typ:      column.EditOptions.EditProps.(GridInputEditProps).Typ,
+							Name:     column.EditOptions.EditProps.(GridInputEditProps).Name, //make pluck or default here
+							Value:    fmt.Sprintf("%s", GetField(row, column.Key)),
+							Class:    column.EditOptions.EditProps.(GridInputEditProps).Class,
 							Required: true,
 						})
 					</td>
-				} else if column.EditOptions.EditType == props.EditSelect {
+				} else if column.EditOptions.EditType == EditSelect {
 					<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
 						<div class="inline-flex items-center rounded-full gap-x-2 :bg-gray-800">
 							<h2 class="text-sm font-normal text-emerald-500">
-								@dropdown.Select(props.SelectProps{
-									Id:    fmt.Sprintf("%s", getField(row, column.EditOptions.EditProps.(props.GridSelectEditProps).Id)),
-									Name:  column.EditOptions.EditProps.(props.GridSelectEditProps).Name,
-									Class: column.EditOptions.EditProps.(props.GridSelectEditProps).Class,
-									DefaultValue: props.SelectOption{
-										Label: utils.StartCase(fmt.Sprintf("%s", getField(row, column.Key))),
-										Value: fmt.Sprintf("%s", getField(row, column.Key)),
+								@dropdown.Select(dropdown.SelectProps{
+									Id:    fmt.Sprintf("%s", GetField(row, column.EditOptions.EditProps.(GridSelectEditProps).Id)),
+									Name:  column.EditOptions.EditProps.(GridSelectEditProps).Name,
+									Class: column.EditOptions.EditProps.(GridSelectEditProps).Class,
+									DefaultValue: dropdown.SelectOption{
+										Label: utils.StartCase(fmt.Sprintf("%s", GetField(row, column.Key))),
+										Value: fmt.Sprintf("%s", GetField(row, column.Key)),
 									},
-									Options: column.EditOptions.EditProps.(props.GridSelectEditProps).Options,
+									Options: column.EditOptions.EditProps.(GridSelectEditProps).Options,
 								})
 							</h2>
 						</div>
 					</td>
-				} else if column.EditOptions.EditType == props.EditMultiSelect {
+				} else if column.EditOptions.EditType == EditMultiSelect {
 					<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
 						@dropdown.MultiSelect(
-							column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Options,
-							getMultiSelectOptions(getField(row, column.Key).([]string)),
-							column.EditOptions.EditProps.(props.GridMultiSelectEditProps).Name,
+							column.EditOptions.EditProps.(GridMultiSelectEditProps).Options,
+							GetMultiSelectOptions(GetField(row, column.Key).([]string)),
+							column.EditOptions.EditProps.(GridMultiSelectEditProps).Name,
 						)
 					</td>
 				}
@@ -225,7 +235,7 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 				<div class="inline-flex overflow-hidden rounded-md border bg-white shadow-sm">
 					<button
 						class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
-						hx-put={ fmt.Sprintf("/grid/%s", getField(row, "Id")) }
+						hx-put={ fmt.Sprintf("%s/%s", gridCtx.Url, GetField(row, "Id")) }
 						hx-include="closest tr"
 						id="saveRow"
 					>
@@ -233,7 +243,7 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 					</button>
 					<button
 						class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
-						hx-get={ fmt.Sprintf("/grid/%s", getField(row, "Id")) }
+						hx-get={ fmt.Sprintf("%s/%s", gridCtx.Url, GetField(row, "Id")) }
 					>
 						<span>Cancel</span>
 					</button>
@@ -243,38 +253,17 @@ templ renderEditableGridRow[D any](columns []props.GridColumn, row D) {
 	</tr>
 }
 
-templ gridUtils(title string, subtitle string, description string) {
+templ gridUtils(title, subtitle, description, url string) {
 	<div class="sm:flex sm:items-center sm:justify-between">
 		<div>
 			<div class="flex items-center gap-x-3">
 				<h2 class="text-lg font-medium text-gray-800 :text-white">{ title }</h2>
 				if subtitle != "" {
-					<span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full :bg-gray-800 :text-blue-400">240 vendors</span>
+					<span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full :bg-gray-800 :text-blue-400">{ subtitle }</span>
 				}
 			</div>
 			<p class="mt-1 text-sm text-gray-500 :text-gray-300">{ description }</p>
 		</div>
-		// <div class="flex items-center mt-4 gap-x-3">
-		// 	<button disabled class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-white border rounded-lg gap-x-2 sm:w-auto :hover:bg-gray-800 :bg-gray-900 hover:bg-gray-100 :text-gray-200 :border-gray-700">
-		// 		<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-		// 			<g clip-path="url(#clip0_3098_154395)">
-		// 				<path d="M13.3333 13.3332L9.99997 9.9999M9.99997 9.9999L6.66663 13.3332M9.99997 9.9999V17.4999M16.9916 15.3249C17.8044 14.8818 18.4465 14.1806 18.8165 13.3321C19.1866 12.4835 19.2635 11.5359 19.0351 10.6388C18.8068 9.7417 18.2862 8.94616 17.5555 8.37778C16.8248 7.80939 15.9257 7.50052 15 7.4999H13.95C13.6977 6.52427 13.2276 5.61852 12.5749 4.85073C11.9222 4.08295 11.104 3.47311 10.1817 3.06708C9.25943 2.66104 8.25709 2.46937 7.25006 2.50647C6.24304 2.54358 5.25752 2.80849 4.36761 3.28129C3.47771 3.7541 2.70656 4.42249 2.11215 5.23622C1.51774 6.04996 1.11554 6.98785 0.935783 7.9794C0.756025 8.97095 0.803388 9.99035 1.07431 10.961C1.34523 11.9316 1.83267 12.8281 2.49997 13.5832" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"></path>
-		// 			</g>
-		// 			<defs>
-		// 				<clipPath id="clip0_3098_154395">
-		// 					<rect width="20" height="20" fill="white"></rect>
-		// 				</clipPath>
-		// 			</defs>
-		// 		</svg>
-		// 		<span>Export</span>
-		// 	</button>
-		// 	<button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 :hover:bg-blue-500 :bg-blue-600">
-		// 		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-		// 			<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-		// 		</svg>
-		// 		<span>Add Users</span>
-		// 	</button>
-		// </div>
 	</div>
 	<div class="my-6 flex-row md:flex md:items-center md:justify-between" x-data="{ isModalOpen: false }">
 		<div class="inline-flex overflow-hidden bg-white border divide-x rounded-lg :bg-gray-900 rtl:flex-row-reverse :border-gray-700 :divide-gray-700">
@@ -285,14 +274,13 @@ templ gridUtils(title string, subtitle string, description string) {
 				Apply Filter
 			</button>
 			<button
-				hx-get="/grid"
+				hx-get={ url }
 				hx-target="body"
 				class="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm :hover:bg-gray-800 :text-gray-300 hover:bg-gray-100"
 			>
 				Reset Filters
 			</button>
 		</div>
-		// @formModal("Name", "name")
 		<div class="flex items-center mt-4 md:mt-0">
 			<span class="absolute">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-3 text-gray-400 :text-gray-600">
@@ -304,9 +292,9 @@ templ gridUtils(title string, subtitle string, description string) {
 	</div>
 }
 
-templ grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, pageOptions props.GridPagination) {
-	<section class="container px-4 mx-auto my-4">
-		@gridUtils("Users", "", "Example Gird with filters, pagination, export etc...")
+templ grid[D any](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) {
+	<section class="container px-4 mx-auto my-8">
+		@gridUtils(gridCtx.Title, gridCtx.Subheading, gridCtx.Description, gridCtx.Url)
 		<div class="flex flex-col">
 			<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
 				<div class="min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -320,7 +308,7 @@ templ grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, pag
 								hx-swap="outerHTML"
 							>
 								for _,row := range gridData {
-									@renderGridRow(gridCtx.Columns, row)
+									@renderRow(gridCtx.Columns, row, gridCtx)
 								}
 							</tbody>
 						</table>
@@ -328,7 +316,7 @@ templ grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, pag
 				</div>
 			</div>
 		</div>
-		@gridPagination(pageOptions)
+		@gridPagination(gridCtx, pageOptions)
 	</section>
 	<script src="/js/multiselect.js" defer></script>
 	// TODO: remove this script tag and place it at a place decoupled from the grid
@@ -355,9 +343,9 @@ templ formModal(label string, name string) {
 				<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 				<div class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl rtl:text-right services:bg-gray-900 sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
 					<div class="mt-4">
-						@input.Input(props.InputProps{
+						@input.Input(input.InputProps{
 							Id:       label,
-							Typ:      props.InputTypeText,
+							Typ:      input.InputTypeText,
 							Name:     name,
 							Label:    label,
 							Class:    "mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm",
@@ -385,49 +373,4 @@ templ formModal(label string, name string) {
 			</div>
 		</form>
 	</div>
-}
-
-templ Grid[D any](gridCtx props.GridContext[props.GridColumn], gridData []D, pageOptions props.GridPagination) {
-	@layout.Base("HTMX Grid") {
-		@grid(gridCtx, gridData, pageOptions)
-	}
-}
-
-templ EditRow[D any](columns []props.GridColumn, row D) {
-	@renderEditableGridRow(columns, row)
-}
-
-templ RenderRow[D any](columns []props.GridColumn, row D) {
-	@renderGridRow(columns, row)
-}
-
-// getField retrieves the value of a field by name using reflection
-func getField[D any](data D, fieldName string) interface{} {
-	// Get the reflect.Value of the struct
-	value := reflect.ValueOf(data)
-
-	// Get the field by name
-	field := value.FieldByName(fieldName)
-
-	// Check if the field is valid
-	if !field.IsValid() {
-		fmt.Println("Field not found:", fieldName)
-		return ""
-	}
-
-	// Convert the field value to string and return
-	if field.Kind() == reflect.Slice {
-		if field.Len() > 0 {
-			var arr = make([]string, 0)
-			for i := 0; i < field.Len(); i++ {
-				arr = append(arr, fmt.Sprintf("%s", field.Index(i)))
-			}
-			return arr
-
-		} else {
-			return make([]string, 0)
-		}
-	}
-
-	return field
 }
