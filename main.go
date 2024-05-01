@@ -41,9 +41,7 @@ func main() {
 			add.Add(cmd, args, components)
 		},
 	}
-
 	rootCmd.Flags().StringP("name", "n", "", "Name of the person to greet")
-	rootCmd.Flags().StringP("generate", "g", "", "Create a Folder according to the arguement")
 	rootCmd.AddCommand(generateCmd)
 	rootCmd.AddCommand(addCmd)
 
