@@ -17,9 +17,6 @@ This project is aimed at proividing a project scaffolding structure and a lightw
  3. Comes bundled with a tailwind config file to add supporting styles to the application.
 
 
-## Usage
-1. 
-
 ## Dependecies Used
 1. Uses Echo for HTTP Routing, Route grouping , Template Rendering etc.
 2. HTMX as a data fetching library.
