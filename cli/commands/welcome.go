@@ -9,7 +9,7 @@ import (
 func Welcome(cmd *cobra.Command, args []string) {
 	name, _ := cmd.Flags().GetString("name")
 	if name == "" {
-		name = "HypeFX User-1"
+		name = "HypeFX Version 0"
 	}
 	fmt.Printf("Hello, %s!\n", name)
 }
