@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+//TODO: handle errors gracefully and logging it
+
 func ReplaceFileContent(filePath, oldValue, newValue string) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -26,7 +28,7 @@ func ReplaceFileContent(filePath, oldValue, newValue string) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Printf("Error scanning file: %v\n", err)
+		//fmt.Printf("Error scanning file: %v\n", err)
 		return
 	}
 
@@ -36,7 +38,7 @@ func ReplaceFileContent(filePath, oldValue, newValue string) {
 	// Open the file again for writing
 	file, err = os.OpenFile(filePath, os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
-		fmt.Printf("Error opening file for writing: %v\n", err)
+		//fmt.Printf("Error opening file for writing: %v\n", err)
 		return
 	}
 	defer file.Close()
@@ -46,11 +48,9 @@ func ReplaceFileContent(filePath, oldValue, newValue string) {
 	for _, line := range modifiedLines {
 		_, err := writer.WriteString(line + "\n")
 		if err != nil {
-			fmt.Printf("Error writing to file: %v\n", err)
+			//fmt.Printf("Error writing to file: %v\n", err)
 			return
 		}
 	}
 	writer.Flush()
-
-	fmt.Println("String replaced successfully.")
 }

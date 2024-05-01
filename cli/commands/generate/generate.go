@@ -11,11 +11,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	BASE_PATH = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
+)
+
 //go:embed scaffolding/*
 var embeddedFiles embed.FS
 
 func Generate(cmd *cobra.Command, args []string) {
-	err := copyDirectory("scaffolding", ".")
+	projectName := args[0]
+	if projectName == "" {
+		fmt.Println("Please specify a project name. This would be the 'go mod init' module name")
+		os.Exit(1)
+	}
+	err := copyDirectory("scaffolding", ".", projectName)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
@@ -23,7 +32,7 @@ func Generate(cmd *cobra.Command, args []string) {
 	fmt.Println("Successfully Instantiated a Hype FX Project")
 }
 
-func copyDirectory(src, dst string) error {
+func copyDirectory(src, dst, projectName string) error {
 	files, err := embeddedFiles.ReadDir(src)
 	if err != nil {
 		return err
@@ -37,11 +46,11 @@ func copyDirectory(src, dst string) error {
 			if err := os.MkdirAll(destPath, 0755); err != nil {
 				return err
 			}
-			if err := copyDirectory(sourcePath, destPath); err != nil {
+			if err := copyDirectory(sourcePath, destPath, projectName); err != nil {
 				return err
 			}
 		} else {
-			if err := copyFile(sourcePath, destPath); err != nil {
+			if err := copyFile(sourcePath, destPath, projectName); err != nil {
 				return err
 			}
 		}
@@ -49,7 +58,7 @@ func copyDirectory(src, dst string) error {
 	return nil
 }
 
-func copyFile(src, dst string) error {
+func copyFile(src, dst, projectName string) error {
 	sourceFile, err := embeddedFiles.Open(src)
 	if err != nil {
 		return err
@@ -67,6 +76,6 @@ func copyFile(src, dst string) error {
 		return err
 	}
 	// TODO: make this better
-	utils.ReplaceFileContent(dst, "github.com/harish876/hypefx/cli/commands/generate/scaffolding", "foobar")
+	utils.ReplaceFileContent(dst, BASE_PATH, projectName)
 	return nil
 }
