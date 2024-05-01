@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/harish876/hypefx/cli/commands/generate/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -65,5 +66,6 @@ func copyFile(src, dst string) error {
 	if err != nil {
 		return err
 	}
+	utils.ReplaceFileContent(dst, "github.com/harish876/hypefx/cli/commands/generate/scaffolding", "foobar")
 	return nil
 }
