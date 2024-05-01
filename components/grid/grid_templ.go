@@ -14,7 +14,6 @@ import (
 	"fmt"
 	"github.com/harish876/hypefx/components/dropdown"
 	"github.com/harish876/hypefx/components/input"
-	"github.com/harish876/hypefx/examples/db"
 	"github.com/harish876/hypefx/examples/utils"
 	"github.com/harish876/hypefx/examples/views/layout"
 	"strconv"
@@ -22,7 +21,7 @@ import (
 
 type GridColumnAlias = GridColumn
 
-func Grid[D db.GridDataRow](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) templ.Component {
+func Grid[D any](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -163,7 +162,7 @@ func gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(page))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 57, Col: 27}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 56, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -189,7 +188,7 @@ func gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(page))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 65, Col: 27}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 64, Col: 27}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -234,7 +233,7 @@ func gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(pageOptions.Current))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 88, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 87, Col: 78}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -247,7 +246,7 @@ func gridPagination(gridCtx *GridContext[GridColumn], pageOptions GridPagination
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(pageOptions.TotalPages))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 88, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 87, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -289,7 +288,7 @@ func gridHeader(columns []GridColumn) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(column.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 99, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 98, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -361,7 +360,7 @@ func renderRow[D any](columns []GridColumn, row D, gridCtx *GridContext[GridColu
 	})
 }
 
-// this is the only section which is hard coded
+// this is the only section which is hard coded for now. Incomplete featureset
 func rowRenderer(row any, column GridColumn) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -384,7 +383,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", GetField(row, "Name")))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 150, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 149, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -397,7 +396,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", GetField(row, "Id")))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 153, Col: 47}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 152, Col: 47}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -415,7 +414,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(utils.StartCase(fmt.Sprintf("%s", GetField(row, column.Key))))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 163, Col: 116}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 162, Col: 116}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -439,7 +438,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 					var templ_7745c5c3_Var17 string
 					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(item)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 171, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 170, Col: 101}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 					if templ_7745c5c3_Err != nil {
@@ -462,7 +461,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", GetField(row, column.Key)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 177, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 176, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -481,7 +480,7 @@ func rowRenderer(row any, column GridColumn) templ.Component {
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%s", GetField(row, column.Key)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 182, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 181, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
@@ -632,7 +631,7 @@ func gridUtils(title, subtitle, description, url string) templ.Component {
 		var templ_7745c5c3_Var22 string
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 259, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 258, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
@@ -650,7 +649,7 @@ func gridUtils(title, subtitle, description, url string) templ.Component {
 			var templ_7745c5c3_Var23 string
 			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(subtitle)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 261, Col: 114}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 260, Col: 114}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
@@ -668,7 +667,7 @@ func gridUtils(title, subtitle, description, url string) templ.Component {
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 264, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `grid/grid.templ`, Line: 263, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {

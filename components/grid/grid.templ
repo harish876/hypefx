@@ -7,12 +7,11 @@ import (
 	"strconv"
 	"github.com/harish876/hypefx/components/input"
 	"github.com/harish876/hypefx/components/dropdown"
-	"github.com/harish876/hypefx/examples/db"
 )
 
 type GridColumnAlias = GridColumn
 
-templ Grid[D db.GridDataRow](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) {
+templ Grid[D any](gridCtx *GridContext[GridColumn], gridData []D, pageOptions GridPagination) {
 	@layout.Base(gridCtx.Title) {
 		@grid(gridCtx, gridData, pageOptions)
 	}
