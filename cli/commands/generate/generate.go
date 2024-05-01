@@ -66,6 +66,7 @@ func copyFile(src, dst string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: make this better
 	utils.ReplaceFileContent(dst, "github.com/harish876/hypefx/cli/commands/generate/scaffolding", "foobar")
 	return nil
 }

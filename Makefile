@@ -3,7 +3,7 @@ BIN_NAME := hype-test
 example:
 	cd examples && npm i && npm run start
 
-build:
+test-build:
 	go build -o ${BIN_NAME} main.go && chmod +x ${BIN_NAME} && mv ${BIN_NAME} ${GOBIN}
 
 generate:
