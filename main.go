@@ -18,11 +18,12 @@ func main() {
 	}
 
 	var generateCmd = &cobra.Command{
-		Use:   "generate [foldername]",
-		Short: "Generates a new HypeFX Project Structure",
-		Long:  `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
-		Args:  cobra.ExactArgs(1), // Require exactly one argument (project_name)
-		Run:   generate.Generate,
+		Use:     "generate [foldername]",
+		Short:   "Generates a new HypeFX Project Structure",
+		Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
+		Args:    cobra.ExactArgs(1), // Require exactly one argument (project_name)
+		Example: "hype generate foobar",
+		Run:     generate.Generate,
 	}
 
 	rootCmd.Flags().StringP("name", "n", "", "Name of the person to greet")
