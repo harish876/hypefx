@@ -2,9 +2,8 @@ package grid
 
 import (
 	"fmt"
-	"github.com/harish876/hypefx/examples/views/layout"
-	"github.com/harish876/hypefx/examples/utils"
 	"strconv"
+	"github.com/harish876/hypefx/components/layout"
 	"github.com/harish876/hypefx/components/input"
 	"github.com/harish876/hypefx/components/dropdown"
 )
@@ -160,7 +159,7 @@ templ rowRenderer(row any, column GridColumn) {
 			<td class="px-12 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
 				<div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-emerald-100/60 :bg-gray-800">
 					<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-					<h2 class="text-sm font-normal text-emerald-500">{ utils.StartCase(fmt.Sprintf("%s", GetField(row,column.Key))) }</h2>
+					<h2 class="text-sm font-normal text-emerald-500">{ StartCase(fmt.Sprintf("%s", GetField(row,column.Key))) }</h2>
 				</div>
 			</td>
 		case "badges":
@@ -208,7 +207,7 @@ templ renderEditableRow[D any](columns []GridColumn, row D, gridCtx *GridContext
 									Name:  column.EditOptions.EditProps.(GridSelectEditProps).Name,
 									Class: column.EditOptions.EditProps.(GridSelectEditProps).Class,
 									DefaultValue: dropdown.SelectOption{
-										Label: utils.StartCase(fmt.Sprintf("%s", GetField(row, column.Key))),
+										Label: StartCase(fmt.Sprintf("%s", GetField(row, column.Key))),
 										Value: fmt.Sprintf("%s", GetField(row, column.Key)),
 									},
 									Options: column.EditOptions.EditProps.(GridSelectEditProps).Options,

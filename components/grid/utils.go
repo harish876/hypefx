@@ -5,6 +5,8 @@ import (
 	"reflect"
 
 	"github.com/harish876/hypefx/components/dropdown"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // getField retrieves the value of a field by name using reflection
@@ -44,4 +46,9 @@ func GetMultiSelectOptions(fields []string) []dropdown.SelectOption {
 		options = append(options, dropdown.SelectOption{Label: field, Value: field})
 	}
 	return options
+}
+
+func StartCase(s string) string {
+	transformer := cases.Title(language.English)
+	return transformer.String(s)
 }
