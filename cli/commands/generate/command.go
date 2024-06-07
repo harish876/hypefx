@@ -1,4 +1,4 @@
-package commands
+package generate
 
 import (
 	"embed"
@@ -7,31 +7,43 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/harish876/hypefx/cli/commands/generate/utils"
+	"github.com/harish876/hypefx/cli/commands"
+	"github.com/harish876/hypefx/cli/commands/utils"
 	"github.com/spf13/cobra"
 )
 
 var (
-	BASE_PATH    = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
-	PROJECT_NAME string
+	MODULE_NAME string
+	BASE_PATH   = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
 )
 
 //go:embed scaffolding/*
 var embeddedFiles embed.FS
 
-func Generate(cmd *cobra.Command, args []string) {
-	projectName := args[0]
-	if projectName == "" {
-		fmt.Println("Please specify a project name. This would be the 'go mod init' module name")
-		os.Exit(1)
-	}
-	PROJECT_NAME = projectName
-	err := copyDirectory("scaffolding", ".")
+func generate(cmd *cobra.Command, args []string) {
+	moduleName, err := commands.GetConfig("module")
 	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(moduleName, args)
+	if len(args) >= 1 {
+		moduleName = args[0]
+		commands.UpsertConfig("module", moduleName)
+	}
+	MODULE_NAME = moduleName.(string)
+	if err := copyDirectory("scaffolding", "."); err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
-	fmt.Println("Successfully Instantiated a Hype FX Project")
+	fmt.Printf("Successfully Instantiated a Hype FX Project in module %s\n", MODULE_NAME)
+}
+
+var GenerateCmd = &cobra.Command{
+	Use:     "generate [project_name/module_name](optional)",
+	Short:   "Generates a new HypeFX Project Structure",
+	Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
+	Example: "hype generate foobar",
+	Run:     generate,
 }
 
 func copyDirectory(src, dst string) error {
@@ -78,10 +90,10 @@ func copyFile(src, dst string) error {
 		return err
 	}
 	// TODO: make this better
-	if PROJECT_NAME == "" {
-		fmt.Println("Project Name is required. It is not set")
+	if MODULE_NAME == "" {
+		fmt.Println("Module Name is required. It is not set")
 		os.Exit(1)
 	}
-	utils.ReplaceFileContent(dst, BASE_PATH, PROJECT_NAME)
+	utils.ReplaceFileContent(dst, BASE_PATH, MODULE_NAME)
 	return nil
 }

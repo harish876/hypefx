@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/harish876/hypefx/cli/commands"
 	"github.com/harish876/hypefx/cli/commands/add"
-	generate "github.com/harish876/hypefx/cli/commands/generate"
+	"github.com/harish876/hypefx/cli/commands/generate"
+	"github.com/harish876/hypefx/cli/commands/set"
+	"github.com/harish876/hypefx/cli/commands/unset"
+	"github.com/harish876/hypefx/cli/commands/version"
 	"github.com/spf13/cobra"
 )
 
@@ -17,18 +19,9 @@ var components embed.FS
 func main() {
 
 	rootCmd := &cobra.Command{
-		Use:   "hello",
-		Short: "A simple CLI tool to greet the user",
-		Run:   commands.Welcome,
-	}
-
-	var generateCmd = &cobra.Command{
-		Use:     "generate [project_name/module_name]",
-		Short:   "Generates a new HypeFX Project Structure",
-		Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
-		Args:    cobra.ExactArgs(1), // Require exactly one argument (project_name)
-		Example: "hype generate foobar",
-		Run:     generate.Generate,
+		Use:   "hypefx",
+		Short: "A simple CLI tool to bootstrap Go + HTMX + Templ Projects.",
+		Run:   version.Welcome,
 	}
 
 	var addCmd = &cobra.Command{
@@ -41,8 +34,14 @@ func main() {
 			add.Add(cmd, args, components)
 		},
 	}
-	rootCmd.Flags().StringP("name", "n", "", "Name of the person to greet")
-	rootCmd.AddCommand(generateCmd)
+	//Init Command Flags
+	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
+	set.InitFlags()
+
+	// Add Commands
+	rootCmd.AddCommand(generate.GenerateCmd)
+	rootCmd.AddCommand(set.SetCmd)
+	rootCmd.AddCommand(unset.UnsetCmd)
 	rootCmd.AddCommand(addCmd)
 
 	if err := rootCmd.Execute(); err != nil {

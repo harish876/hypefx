@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harish876/hypefx/cli/commands/generate/utils"
+	"github.com/harish876/hypefx/cli/commands/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -21,14 +21,15 @@ func Add(cmd *cobra.Command, args []string, components embed.FS) {
 	componentName := args[0]
 	projectName := args[1]
 	PROJECT_NAME = projectName
-	currDir, err := os.Getwd()
-	if err != nil {
-		fmt.Println("Error Getting the current directory: ", err)
-		os.Exit(1)
-	}
-	componentPath := filepath.Join(currDir, "components")
-	copyDirectory("components", componentPath, components, componentName)
-	fmt.Printf("Component %s Added. Dont forget to add other dependent components", componentName)
+	//test
+	// currDir, err := os.Getwd()
+	// if err != nil {
+	// 	fmt.Println("Error Getting the current directory: ", err)
+	// 	os.Exit(1)
+	// }
+	// componentPath := filepath.Join(currDir, "components")
+	// copyDirectory("components", componentPath, components, componentName)
+	fmt.Printf("Component %s Added. Dont forget to add other dependent components\n", componentName)
 }
 
 func copyDirectory(src, dst string, components embed.FS, componentName string) error {
