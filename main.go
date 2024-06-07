@@ -9,6 +9,7 @@ import (
 	"github.com/harish876/hypefx/cli/commands/generate"
 	"github.com/harish876/hypefx/cli/commands/set"
 	"github.com/harish876/hypefx/cli/commands/unset"
+	"github.com/harish876/hypefx/cli/commands/utils"
 	"github.com/harish876/hypefx/cli/commands/version"
 	"github.com/spf13/cobra"
 )
@@ -17,6 +18,10 @@ import (
 var components embed.FS
 
 func main() {
+	logger, err := utils.NewLogger()
+	if err != nil {
+		fmt.Printf("Unable to initialise logger %v", err)
+	}
 
 	rootCmd := &cobra.Command{
 		Use:   "hypefx",
@@ -35,6 +40,7 @@ func main() {
 		},
 	}
 	//Init Command Flags
+	logger.Info("Hello")
 	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
 	set.InitFlags()
 
@@ -45,7 +51,7 @@ func main() {
 	rootCmd.AddCommand(addCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		logger.Error("rootCmd", err)
 		os.Exit(1)
 	}
 }

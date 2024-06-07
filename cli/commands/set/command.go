@@ -36,6 +36,18 @@ var (
 			shorthand: "r",
 			usage:     "Pass in the flag if you want to enable file based routing",
 		},
+		{
+			typ:       STRING,
+			name:      "file",
+			shorthand: "f",
+			usage:     "Pass in the path to the log file to see logs",
+		},
+		{
+			typ:       STRING,
+			name:      "level",
+			shorthand: "l",
+			usage:     "Pass in the log level [INFO | DEBUG | ERROR]",
+		},
 	}
 )
 
