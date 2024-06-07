@@ -29,11 +29,12 @@ func main() {
 		Run:   version.Welcome,
 	}
 
+	//this needs access to components
 	var addCmd = &cobra.Command{
-		Use:     "add [compoent_name] [project_name/module_name]",
+		Use:     "add [compoent_name] [project_name/module_name](optional)",
 		Short:   "Add a new component from the component library",
 		Long:    `Add a new component from the component library , and customise it as per your liking`,
-		Args:    cobra.ExactArgs(2), // Require exactly two arguments (component_name, module_name)
+		Args:    cobra.ExactArgs(1), // Require exactly two arguments (component_name, module_name)
 		Example: "hype add grid foobar",
 		Run: func(cmd *cobra.Command, args []string) {
 			add.Add(cmd, args, components)

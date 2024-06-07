@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/harish876/hypefx/cli/commands"
 )
@@ -46,6 +47,7 @@ func NewLogger() (*Logger, error) {
 }
 
 func getLogLevel(level string) slog.Leveler {
+	level = strings.ToUpper(level)
 	switch level {
 	case "INFO":
 		return slog.LevelInfo
