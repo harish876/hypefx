@@ -25,7 +25,6 @@ func generate(cmd *cobra.Command, args []string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(moduleName, args)
 	if len(args) >= 1 {
 		moduleName = args[0]
 		commands.UpsertConfig("module", moduleName)

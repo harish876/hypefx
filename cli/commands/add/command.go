@@ -8,27 +8,34 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/harish876/hypefx/cli/commands"
 	"github.com/harish876/hypefx/cli/commands/utils"
 	"github.com/spf13/cobra"
 )
 
 var (
-	BASE_PATH    = "github.com/harish876/hypefx"
-	PROJECT_NAME string
+	BASE_PATH   = "github.com/harish876/hypefx"
+	MODULE_NAME string
 )
 
 func Add(cmd *cobra.Command, args []string, components embed.FS) {
 	componentName := args[0]
-	projectName := args[1]
-	PROJECT_NAME = projectName
-	//test
-	// currDir, err := os.Getwd()
-	// if err != nil {
-	// 	fmt.Println("Error Getting the current directory: ", err)
-	// 	os.Exit(1)
-	// }
-	// componentPath := filepath.Join(currDir, "components")
-	// copyDirectory("components", componentPath, components, componentName)
+	moduleName, err := commands.GetConfig("module")
+	if err != nil || moduleName == nil {
+		fmt.Println(err)
+	}
+	if len(args) >= 1 {
+		moduleName = args[0]
+		commands.UpsertConfig("module", moduleName)
+	}
+	MODULE_NAME = moduleName.(string)
+	currDir, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error Getting the current directory: ", err)
+		os.Exit(1)
+	}
+	componentPath := filepath.Join(currDir, "components")
+	copyDirectory("components", componentPath, components, componentName)
 	fmt.Printf("Component %s Added. Dont forget to add other dependent components\n", componentName)
 }
 
@@ -79,6 +86,6 @@ func copyFile(src, dst string, components embed.FS) error {
 		return err
 	}
 	// TODO: make this better -> hardcoded
-	utils.ReplaceFileContent(dst, BASE_PATH, PROJECT_NAME)
+	utils.ReplaceFileContent(dst, BASE_PATH, MODULE_NAME)
 	return nil
 }
