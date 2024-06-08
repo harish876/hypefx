@@ -4,9 +4,14 @@
   "description": "hypefx is a scaffolding tool for a project using htmx, templ and any web framework like echo.",
   "main": "tailwind.config.js",
   "scripts": {
-    "start:tailwind": "npx tailwindcss -i ./input.css -o ./assets/css/styles.css --watch",
-    "start:go": "air -c ./.air.toml",
-    "start": "concurrently \"npm run start:tailwind\" \"npm run start:go\""
+    "dev:tailwind": "npx tailwindcss -i ./input.css -o ./assets/css/styles.css --watch",
+    "dev:go": "air -c ./.air.toml",
+    "dev": "concurrently \"npm run dev:tailwind\" \"npm run dev:go\"",
+    "prestart":"npx tailwindcss -i ./input.css -o ./assets/css/styles.css",
+    "start":"go build -o app cmd/main.go && ./app",
+    "docker:build":"todo",
+    "docker:run":"todo"
+
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

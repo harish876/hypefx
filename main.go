@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/harish876/hypefx/cli/commands"
 	"github.com/harish876/hypefx/cli/commands/add"
-	generate "github.com/harish876/hypefx/cli/commands/generate"
+	"github.com/harish876/hypefx/cli/commands/generate"
+	"github.com/harish876/hypefx/cli/commands/set"
+	"github.com/harish876/hypefx/cli/commands/unset"
+	"github.com/harish876/hypefx/cli/commands/utils"
+	"github.com/harish876/hypefx/cli/commands/version"
 	"github.com/spf13/cobra"
 )
 
@@ -15,38 +18,41 @@ import (
 var components embed.FS
 
 func main() {
+	logger, err := utils.NewLogger()
+	if err != nil {
+		fmt.Printf("Unable to initialise logger %v", err)
+	}
 
 	rootCmd := &cobra.Command{
-		Use:   "hello",
-		Short: "A simple CLI tool to greet the user",
-		Run:   commands.Welcome,
+		Use:   "hypefx",
+		Short: "A simple CLI tool to bootstrap Go + HTMX + Templ Projects.",
+		Run:   version.Welcome,
 	}
 
-	var generateCmd = &cobra.Command{
-		Use:     "generate [project_name/module_name]",
-		Short:   "Generates a new HypeFX Project Structure",
-		Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
-		Args:    cobra.ExactArgs(1), // Require exactly one argument (project_name)
-		Example: "hype generate foobar",
-		Run:     generate.Generate,
-	}
-
+	//this needs access to components
 	var addCmd = &cobra.Command{
-		Use:     "add [compoent_name] [project_name/module_name]",
+		Use:     "add [compoent_name] [project_name/module_name](optional)",
 		Short:   "Add a new component from the component library",
 		Long:    `Add a new component from the component library , and customise it as per your liking`,
-		Args:    cobra.ExactArgs(2), // Require exactly two arguments (component_name, module_name)
+		Args:    cobra.ExactArgs(1), // Require exactly two arguments (component_name, module_name)
 		Example: "hype add grid foobar",
 		Run: func(cmd *cobra.Command, args []string) {
 			add.Add(cmd, args, components)
 		},
 	}
-	rootCmd.Flags().StringP("name", "n", "", "Name of the person to greet")
-	rootCmd.AddCommand(generateCmd)
+	//Init Command Flags
+	logger.Info("Hello")
+	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
+	set.InitFlags()
+
+	// Add Commands
+	rootCmd.AddCommand(generate.GenerateCmd)
+	rootCmd.AddCommand(set.SetCmd)
+	rootCmd.AddCommand(unset.UnsetCmd)
 	rootCmd.AddCommand(addCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		logger.Error("rootCmd", err)
 		os.Exit(1)
 	}
 }

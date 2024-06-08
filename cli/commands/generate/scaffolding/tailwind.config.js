@@ -3,7 +3,7 @@
 
 module.exports = {
     content: [
-      // "../**/*.{html,templ,go,js}",
+      "../components/**/*/*.{templ,html,js}",
       "./views/**/*/*.{templ,html,js}",
     ],
     theme: {
