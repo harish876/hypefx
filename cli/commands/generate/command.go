@@ -2,9 +2,11 @@ package generate
 
 import (
 	"embed"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/harish876/hypefx/cli/commands"
@@ -13,39 +15,58 @@ import (
 )
 
 var (
-	MODULE_NAME string
-	BASE_PATH   = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
+	BASE_PATH = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
 )
-
-//go:embed scaffolding/*
-var embeddedFiles embed.FS
-
-func generate(cmd *cobra.Command, args []string) {
-	moduleName, err := commands.GetConfig("module")
-	if err != nil {
-		fmt.Println(err)
-	}
-	if len(args) >= 1 {
-		moduleName = args[0]
-		commands.UpsertConfig("module", moduleName)
-	}
-	MODULE_NAME = moduleName.(string)
-	if err := copyDirectory("scaffolding", "."); err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
-	fmt.Printf("Successfully Instantiated a Hype FX Project in module %s\n", MODULE_NAME)
-}
 
 var GenerateCmd = &cobra.Command{
 	Use:     "generate [project_name/module_name](optional)",
 	Short:   "Generates a new HypeFX Project Structure",
 	Long:    `Generates a new HypeFX Project Structure, when a base path to the project i.e the go mod base path is provided.`,
-	Example: "hype generate foobar",
+	Example: "hype generate",
 	Run:     generate,
 }
 
-func copyDirectory(src, dst string) error {
+//go:embed scaffolding/*
+var embeddedFiles embed.FS
+
+func generate(cmd *cobra.Command, args []string) {
+	view := NewModel()
+	var message string
+	var errorInterface error
+	var moduleName interface{}
+	if len(args) >= 1 {
+		moduleName = args[0]
+		commands.UpsertConfig("module", moduleName.(string))
+	} else {
+		moduleName, err := commands.GetConfig("module")
+		if err != nil {
+			errorInterface = errors.Join(err, fmt.Errorf("unable to find module name. use hype set --module [module_name]"))
+			DisplayError(errorInterface)
+			return
+		}
+		if moduleName == nil && len(args) == 0 {
+			errorInterface = fmt.Errorf("unable to find module name. use hype set --module [module_name]")
+			DisplayError(errorInterface)
+			return
+		}
+	}
+	initCmd := exec.Command("go", "mod", "init", moduleName.(string))
+	_, err := initCmd.CombinedOutput()
+	if err != nil {
+		view.errorInterface = fmt.Errorf("error initializing Go module. run go mod init [module_name] manually")
+		DisplayError(errorInterface)
+		return
+	}
+	if err := copyDirectory("scaffolding", ".", moduleName.(string)); err != nil {
+		view.errorInterface = fmt.Errorf("unable to scaffold project")
+		DisplayError(errorInterface)
+		return
+	}
+	message = fmt.Sprintf("Successfully Instantiated a Hype FX Project in module %s", moduleName.(string))
+	DisplayMessage(message)
+}
+
+func copyDirectory(src, dst, moduleName string) error {
 	files, err := embeddedFiles.ReadDir(src)
 	if err != nil {
 		return err
@@ -59,11 +80,11 @@ func copyDirectory(src, dst string) error {
 			if err := os.MkdirAll(destPath, 0755); err != nil {
 				return err
 			}
-			if err := copyDirectory(sourcePath, destPath); err != nil {
+			if err := copyDirectory(sourcePath, destPath, moduleName); err != nil {
 				return err
 			}
 		} else {
-			if err := copyFile(sourcePath, destPath); err != nil {
+			if err := copyFile(sourcePath, destPath, moduleName); err != nil {
 				return err
 			}
 		}
@@ -71,7 +92,7 @@ func copyDirectory(src, dst string) error {
 	return nil
 }
 
-func copyFile(src, dst string) error {
+func copyFile(src, dst, moduleName string) error {
 	sourceFile, err := embeddedFiles.Open(src)
 	if err != nil {
 		return err
@@ -88,11 +109,6 @@ func copyFile(src, dst string) error {
 	if err != nil {
 		return err
 	}
-	// TODO: make this better
-	if MODULE_NAME == "" {
-		fmt.Println("Module Name is required. It is not set")
-		os.Exit(1)
-	}
-	utils.ReplaceFileContent(dst, BASE_PATH, MODULE_NAME)
+	utils.ReplaceFileContent(dst, BASE_PATH, moduleName)
 	return nil
 }

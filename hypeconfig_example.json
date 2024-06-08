@@ -1,6 +1,0 @@
-{
-  "module": "github.com/harish876/test",
-  "routing": true,
-  "logfile": "hypefx.log",
-  "level": "INFO"
-}
