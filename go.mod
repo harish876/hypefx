@@ -1,6 +1,8 @@
 module github.com/harish876/hypefx
 
-go 1.21.0
+go 1.22
+
+toolchain go1.22.4
 
 require (
 	github.com/a-h/templ v0.2.707
@@ -19,6 +21,7 @@ require (
 	github.com/charmbracelet/x/term v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.1.0 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
+	github.com/harish876/go-tree-sitter v0.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
