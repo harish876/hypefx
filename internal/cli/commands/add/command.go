@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harish876/hypefx/cli/commands"
-	"github.com/harish876/hypefx/cli/commands/utils"
+	"github.com/harish876/hypefx/internal/cli/commands"
+	"github.com/harish876/hypefx/internal/utils"
 	"github.com/spf13/cobra"
 )
 

@@ -9,13 +9,13 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/harish876/hypefx/cli/commands"
-	"github.com/harish876/hypefx/cli/commands/utils"
+	"github.com/harish876/hypefx/internal/cli/commands"
+	"github.com/harish876/hypefx/internal/utils"
 	"github.com/spf13/cobra"
 )
 
 var (
-	BASE_PATH = "github.com/harish876/hypefx/cli/commands/generate/scaffolding"
+	BASE_PATH = "github.com/harish876/hypefx/internal/cli/commands/generate/scaffolding"
 )
 
 var GenerateCmd = &cobra.Command{

@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/harish876/hypefx/cli/commands/generate/scaffolding/views/welcome"
+	"github.com/harish876/hypefx/internal/cli/commands/generate/scaffolding/views/welcome"
 	"github.com/labstack/echo/v4"
 )
 

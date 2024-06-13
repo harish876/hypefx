@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/harish876/hypefx/cli/commands/generate/scaffolding/handlers"
-	"github.com/harish876/hypefx/cli/commands/generate/scaffolding/routes"
+	"github.com/harish876/hypefx/internal/cli/commands/generate/scaffolding/handlers"
+	"github.com/harish876/hypefx/internal/cli/commands/generate/scaffolding/routes"
 
 	"github.com/labstack/echo/v4"
 )

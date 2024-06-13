@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/harish876/hypefx/cli/commands/generate/scaffolding/handlers"
+	"github.com/harish876/hypefx/internal/cli/commands/generate/scaffolding/handlers"
 
 	"github.com/labstack/echo/v4"
 )

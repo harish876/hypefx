@@ -1,7 +1,7 @@
 package set
 
 import (
-	"github.com/harish876/hypefx/cli/commands"
+	"github.com/harish876/hypefx/internal/cli/commands"
 	"github.com/spf13/cobra"
 )
 

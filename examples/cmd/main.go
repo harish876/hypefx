@@ -12,9 +12,10 @@ func main() {
 
 	app.HTTPErrorHandler = handlers.NotFoundErrorHandler
 
-	routes.RegisterHomeRoutes(app)
-	routes.RegisterGridRoutes(app)
-	routes.RegisterFormRoutes(app)
+	routes.RegisterRoutes(app)
+	// routes.RegisterHomeRoutes(app)
+	// routes.RegisterGridRoutes(app)
+	// routes.RegisterFormRoutes(app)
 
 	app.Logger.Fatal(app.Start(":42069"))
 }

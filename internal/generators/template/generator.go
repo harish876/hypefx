@@ -13,6 +13,7 @@ import (
 type Route struct {
 	PackageName string
 	RouteGroup  string
+	RouteName   string
 	Handlers    []Handler
 }
 
@@ -33,48 +34,59 @@ func Generator(templateParams TemplateParams) error {
 			relativePath := strings.TrimPrefix(path, templateParams.BasePath)
 			pathToFile := strings.TrimSuffix(relativePath, "/"+info.Name())
 
-			if !strings.HasSuffix(info.Name(), "index.go") {
-				//do something specific to different file patterns
-				fmt.Println("file types other than index.go not implemented yet.continuing execution for other...")
-				return nil
+			if strings.HasSuffix(info.Name(), "index.go") || strings.Contains(info.Name(), "param") {
 
-			}
+				fileContents, err := os.ReadFile(path)
+				if err != nil {
+					return err
+				}
 
-			fileContents, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
+				handlerDetails, packageName, err := annotations.GetHandlerDetailsFromAnnotations(fileContents)
+				if err != nil {
+					return err
+				}
+				if len(handlerDetails) == 0 {
+					return fmt.Errorf("no annotations found. generator is unable to map the handler names to the routes. please add annotations to your routes for autogeneration or unset the routing flag: %s", path)
+				}
 
-			handlerDetails, packageName, err := annotations.GetHandlerDetailsFromAnnotations(fileContents)
-			if err != nil {
-				return err
-			}
-			if len(handlerDetails) == 0 {
-				return fmt.Errorf("no annotations found. generator is unable to map the handler names to the routes. please add annotations to your routes for autogeneration or unset the routing flag: %s", path)
-			}
+				routeName := pathToFile
 
-			fmt.Println(
-				"Handler Map: ", handlerDetails,
-				"\nPackage Name: ", packageName,
-				"\nFull Path: ", path,
-				"\n Route Group: ", pathToFile,
-				"\n",
-			)
+				if strings.Contains(info.Name(), "param") {
+					fileName := strings.TrimSuffix(info.Name(), ".go")
+					paramFileFormat := strings.Split(fileName, "_")
+					if len(paramFileFormat) < 2 {
+						return fmt.Errorf("invalid param file format. it should be param_[param_name].go")
+					}
+					routeName = pathToFile + "/:" + paramFileFormat[1]
+					fmt.Println(
+						"Handler Map: ", handlerDetails,
+						"\nPackage Name: ", packageName,
+						"\nFull Path: ", path,
+						"\nRoute Name: ", routeName,
+						"\n",
+					)
+				}
 
-			var handlers []Handler
-			for _, val := range handlerDetails {
+				var handlers []Handler
+				for _, val := range handlerDetails {
 
-				handlers = append(handlers, Handler{
-					Name:       val.HandlerName,
-					HttpMethod: annotations.FromEnum(val.Method),
+					handlers = append(handlers, Handler{
+						Name:       val.HandlerName,
+						HttpMethod: annotations.FromEnum(val.Method),
+					})
+				}
+
+				routes = append(routes, Route{
+					PackageName: packageName,
+					RouteGroup:  pathToFile,
+					RouteName:   routeName,
+					Handlers:    handlers,
 				})
 			}
-
-			routes = append(routes, Route{
-				PackageName: packageName,
-				RouteGroup:  pathToFile,
-				Handlers:    handlers,
-			})
+		} else {
+			//do something specific to different file patterns
+			fmt.Println("file types other than index.go not implemented yet.continuing execution for other...")
+			return nil
 		}
 		return nil
 	})
@@ -106,7 +118,7 @@ import (
 func RegisterRoutes(e *echo.Echo) {
 {{- range $idx, $route := .Routes }}
 
-	apiGroup{{$idx}} := e.Group("{{$route.RouteGroup}}")
+	apiGroup{{$idx}} := e.Group("{{$route.RouteName}}")
 
 	{{- range .Handlers}}
 		apiGroup{{$idx}}.{{.HttpMethod}}("",{{$route.PackageName}}.{{.Name}})
@@ -122,6 +134,7 @@ func RegisterRoutes(e *echo.Echo) {
 	}
 
 	imports := make([]string, 0, len(importMap))
+	fmt.Println("Imports", importMap)
 	for pkg := range importMap {
 		imports = append(imports, fmt.Sprintf("%s%s", templateParams.BaseImportPath, pkg))
 	}

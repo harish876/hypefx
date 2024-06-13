@@ -2,15 +2,16 @@ package main
 
 import (
 	"embed"
-	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
-	"github.com/harish876/hypefx/cli/commands/add"
-	"github.com/harish876/hypefx/cli/commands/generate"
-	"github.com/harish876/hypefx/cli/commands/set"
-	"github.com/harish876/hypefx/cli/commands/unset"
-	"github.com/harish876/hypefx/cli/commands/utils"
-	"github.com/harish876/hypefx/cli/commands/version"
+	"github.com/harish876/hypefx/internal/cli/commands/add"
+	"github.com/harish876/hypefx/internal/cli/commands/generate"
+	"github.com/harish876/hypefx/internal/cli/commands/set"
+	"github.com/harish876/hypefx/internal/cli/commands/unset"
+	"github.com/harish876/hypefx/internal/cli/commands/version"
+	"github.com/harish876/hypefx/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -18,9 +19,10 @@ import (
 var components embed.FS
 
 func main() {
-	logger, err := utils.NewLogger()
+	logger, err := utils.NewLogger(filepath.Join("hypefx.log"))
+
 	if err != nil {
-		fmt.Printf("Unable to initialise logger %v", err)
+		log.Fatalf("Unable to initialise logger %v", err)
 	}
 
 	rootCmd := &cobra.Command{

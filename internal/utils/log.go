@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harish876/hypefx/cli/commands"
+	"github.com/harish876/hypefx/internal/cli/commands"
 )
 
 type Logger struct {
@@ -18,11 +18,11 @@ var (
 	DEFAULT_LOG_LEVEL = "INFO"
 )
 
-func NewLogger() (*Logger, error) {
+func NewLogger(defaultPath string) (*Logger, error) {
 	logFile, err := commands.GetConfig("logfile")
 	if err != nil && logFile == nil {
 		//fmt.Printf("failed to find logfile from settings. Using Default: %s\n", DEFAULT_LOG_FILE)
-		logFile = DEFAULT_LOG_FILE
+		logFile = defaultPath
 	}
 	level, err := commands.GetConfig("level")
 	if err != nil && level == nil {
