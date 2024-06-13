@@ -46,6 +46,7 @@ func Generator(templateParams TemplateParams) error {
 					return err
 				}
 				if len(handlerDetails) == 0 {
+					//revisit this block. bug, if one method is missed, there is not comparator
 					return fmt.Errorf("no annotations found. generator is unable to map the handler names to the routes. please add annotations to your routes for autogeneration or unset the routing flag: %s", path)
 				}
 
@@ -58,13 +59,13 @@ func Generator(templateParams TemplateParams) error {
 						return fmt.Errorf("invalid param file format. it should be param_[param_name].go")
 					}
 					routeName = pathToFile + "/:" + paramFileFormat[1]
-					fmt.Println(
+					/*fmt.Println(
 						"Handler Map: ", handlerDetails,
 						"\nPackage Name: ", packageName,
 						"\nFull Path: ", path,
 						"\nRoute Name: ", routeName,
 						"\n",
-					)
+					)*/
 				}
 
 				var handlers []Handler
@@ -85,7 +86,7 @@ func Generator(templateParams TemplateParams) error {
 			}
 		} else {
 			//do something specific to different file patterns
-			fmt.Println("file types other than index.go not implemented yet.continuing execution for other...")
+			//fmt.Println("file types other than index.go not implemented yet.continuing execution for other...")
 			return nil
 		}
 		return nil
@@ -134,7 +135,7 @@ func RegisterRoutes(e *echo.Echo) {
 	}
 
 	imports := make([]string, 0, len(importMap))
-	fmt.Println("Imports", importMap)
+	//fmt.Println("Imports", importMap)
 	for pkg := range importMap {
 		imports = append(imports, fmt.Sprintf("%s%s", templateParams.BaseImportPath, pkg))
 	}

@@ -45,7 +45,7 @@ func generate(cmd *cobra.Command, args []string) {
 			return
 		}
 		if moduleName == nil && len(args) == 0 {
-			errorInterface = fmt.Errorf("unable to find module name. use hype set --module [module_name]")
+			errorInterface = fmt.Errorf("unable to find module name. use hype generate [module_name] to automagically perform the initializations")
 			DisplayError(errorInterface)
 			return
 		}

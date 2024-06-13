@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/harish876/hypefx/internal/cli/commands/add"
+	"github.com/harish876/hypefx/internal/cli/commands/build"
 	"github.com/harish876/hypefx/internal/cli/commands/generate"
 	"github.com/harish876/hypefx/internal/cli/commands/set"
 	"github.com/harish876/hypefx/internal/cli/commands/unset"
@@ -36,14 +37,14 @@ func main() {
 		Use:     "add [compoent_name] [project_name/module_name](optional)",
 		Short:   "Add a new component from the component library",
 		Long:    `Add a new component from the component library , and customise it as per your liking`,
-		Args:    cobra.ExactArgs(1), // Require exactly two arguments (component_name, module_name)
-		Example: "hype add grid foobar",
+		Args:    cobra.ExactArgs(1),
+		Example: "hype add grid",
 		Run: func(cmd *cobra.Command, args []string) {
 			add.Add(cmd, args, components)
 		},
 	}
 	//Init Command Flags
-	logger.Info("Hello")
+	logger.Info("CLI Initialization done")
 	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
 	set.InitFlags()
 
@@ -52,6 +53,7 @@ func main() {
 	rootCmd.AddCommand(set.SetCmd)
 	rootCmd.AddCommand(unset.UnsetCmd)
 	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(build.BuildCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		logger.Error("rootCmd", err)
