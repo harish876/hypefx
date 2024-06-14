@@ -25,3 +25,4 @@ go.work
 node_modules
 package-lock.json
 *.log
+foobar

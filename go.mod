@@ -1,15 +1,19 @@
 module github.com/harish876/hypefx
 
-go 1.21.0
+go 1.22
+
+toolchain go1.22.4
 
 require (
 	github.com/a-h/templ v0.2.707
 	github.com/charmbracelet/bubbletea v0.26.4
 	github.com/charmbracelet/lipgloss v0.11.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
+	github.com/harish876/go-tree-sitter v0.0.1
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/text v0.16.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (

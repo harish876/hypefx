@@ -2,15 +2,16 @@ package main
 
 import (
 	"embed"
-	"fmt"
+	"log/slog"
 	"os"
+	"path/filepath"
 
-	"github.com/harish876/hypefx/cli/commands/add"
-	"github.com/harish876/hypefx/cli/commands/generate"
-	"github.com/harish876/hypefx/cli/commands/set"
-	"github.com/harish876/hypefx/cli/commands/unset"
-	"github.com/harish876/hypefx/cli/commands/utils"
-	"github.com/harish876/hypefx/cli/commands/version"
+	"github.com/harish876/hypefx/internal/cli/commands/add"
+	"github.com/harish876/hypefx/internal/cli/commands/generate"
+	"github.com/harish876/hypefx/internal/cli/commands/set"
+	"github.com/harish876/hypefx/internal/cli/commands/unset"
+	"github.com/harish876/hypefx/internal/utils"
+	"github.com/harish876/hypefx/internal/cli/commands/version"
 	"github.com/spf13/cobra"
 )
 
@@ -18,10 +19,11 @@ import (
 var components embed.FS
 
 func main() {
-	logger, err := utils.NewLogger()
-	if err != nil {
-		fmt.Printf("Unable to initialise logger %v", err)
-	}
+	loggerConfig := utils.FromConfig(filepath.Join("tmp", "hypefx.log"))
+	jsonHandler := slog.NewJSONHandler(loggerConfig, &slog.HandlerOptions{
+		Level: utils.FromLogLevel("Debug"),
+	})
+	slog.SetDefault(slog.New(jsonHandler))
 
 	rootCmd := &cobra.Command{
 		Use:   "hypefx",
@@ -29,7 +31,7 @@ func main() {
 		Run:   version.Welcome,
 	}
 
-	//this needs access to components
+	//this needs access to components.to be refactored
 	var addCmd = &cobra.Command{
 		Use:     "add [compoent_name] [project_name/module_name](optional)",
 		Short:   "Add a new component from the component library",
@@ -41,7 +43,7 @@ func main() {
 		},
 	}
 	//Init Command Flags
-	logger.Info("Hello")
+	slog.Info("CLI Initialization done")
 	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
 	set.InitFlags()
 
@@ -52,7 +54,7 @@ func main() {
 	rootCmd.AddCommand(addCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		logger.Error("rootCmd", err)
+		slog.Error("rootCmd", err)
 		os.Exit(1)
 	}
 }
