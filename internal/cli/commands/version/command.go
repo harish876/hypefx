@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	MESSAGE string = "Hype - 0.0.1"
+	MESSAGE string = "Hype - 0.0.2"
 )
 
 func Welcome(cmd *cobra.Command, args []string) {
