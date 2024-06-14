@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"os"
 	"testing"
 
 	"github.com/harish876/hypefx/internal/generators/template"
@@ -17,4 +18,10 @@ func TestTemplateGeneration(t *testing.T) {
 	if err := template.Generator(templateParams); err != nil {
 		t.Fatalf("unable to generate templates: %v", err)
 	}
+
+	fileContents, err := os.ReadFile(templateParams.DestinationDir)
+	if err != nil {
+		t.Fatalf("unable to open the destination dir")
+	}
+	_ = fileContents
 }
