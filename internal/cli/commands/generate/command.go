@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -26,46 +27,71 @@ var GenerateCmd = &cobra.Command{
 	Run:     generate,
 }
 
-//go:embed scaffolding/*
+//go:embed scaffolding
 var embeddedFiles embed.FS
 
 func generate(cmd *cobra.Command, args []string) {
-	view := NewModel()
 	var message string
 	var errorInterface error
 	var moduleName interface{}
+
+	configs, err := commands.GetAllConfig()
+	if err != nil {
+		slog.Error("generate", "GetAllConfig func call", err)
+	}
 	if len(args) >= 1 {
 		moduleName = args[0]
 		commands.UpsertConfig("module", moduleName.(string))
 	} else {
-		moduleName, err := commands.GetConfig("module")
+		modName, err := commands.FromConfig(configs, "module")
+		slog.Debug("generate", "moduleName", modName)
 		if err != nil {
 			errorInterface = errors.Join(err, fmt.Errorf("unable to find module name. use hype set --module [module_name]"))
 			DisplayError(errorInterface)
 			return
 		}
-		if moduleName == nil && len(args) == 0 {
+		if modName == nil && len(args) == 0 {
 			errorInterface = fmt.Errorf("unable to find module name. use hype generate [module_name] to automagically perform the initializations")
 			DisplayError(errorInterface)
 			return
 		}
+		moduleName = modName
 	}
+	slog.Debug("generate", "moduleName", moduleName)
 	initCmd := exec.Command("go", "mod", "init", moduleName.(string))
-	_, err := initCmd.CombinedOutput()
+	_, err = initCmd.CombinedOutput()
 	if err != nil {
-		view.errorInterface = fmt.Errorf("error initializing Go module. run go mod init [module_name] manually")
+		errorInterface = fmt.Errorf("error initializing Go module.\ngo mod might already exist or there might be no go mod file.run go mod init [module_name] manually.\ncheck error with key 'go mod init error' at tmp/hypefx.log for more info")
 		DisplayError(errorInterface)
+		slog.Debug("generate", "go mod init error", err)
 		return
 	}
 	if err := copyDirectory("scaffolding", ".", moduleName.(string)); err != nil {
-		view.errorInterface = fmt.Errorf("unable to scaffold project")
-		DisplayError(errorInterface)
+		errorInterface = fmt.Errorf("unable to scaffold project")
+		DisplayError(errors.Join(errorInterface, fmt.Errorf("check logs with key 'scaffolding error' at tmp/hypefx for more info")))
+		slog.Debug("generate", "scaffolding error", err)
 		return
 	}
+	appDir, _ := commands.FromConfig(configs, "appDir")
+	routePath, _ := commands.FromConfig(configs, "routesPath")
+	routing, _ := commands.FromConfig(configs, "routing")
+
 	basePath, _ := os.Getwd()
-	commands.UpsertConfig("basePath", filepath.Join(basePath, "app"))
-	commands.UpsertConfig("routesDir", filepath.Join(basePath, "routes", "routes.go"))
-	message = fmt.Sprintf("Successfully Instantiated a Hype FX Project in module %s", moduleName.(string))
+	if appDir == nil {
+		path := filepath.Join(basePath, "app")
+		slog.Debug("generate", "set appDir", path)
+		commands.UpsertConfig("appDir", path) //default can be overriden. check it this is set first
+	}
+	if routePath == nil {
+		path := filepath.Join(basePath, "routes", "routes.go")
+		slog.Debug("generate", "set routesPath", path)
+		commands.UpsertConfig("routesPath", path) //default can be overriden. check it this is set first
+	}
+	if routing == nil {
+		slog.Debug("generate", "set routing", true)
+		commands.UpsertConfig("routing", true) //default can be overriden. check it this is set first
+	}
+	message = fmt.Sprintf("Successfully Instantiated a Hype FX Project in module %s\n\n1.Run `go mod tidy`\n2.Run `npm install` or `npm i`\n4.Start the dev server using `npm run dev`\n4.😅 no more of this npm business.custom build command coming soon...\n5.And.. you can find CLI logs at tmp/hypefx.log", moduleName.(string))
 	DisplayMessage(message)
 }
 

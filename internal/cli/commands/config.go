@@ -3,6 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"os"
 )
 
@@ -88,5 +89,36 @@ func GetConfig(key string) (interface{}, error) {
 	if value, ok := config[key]; ok {
 		return value, nil
 	}
-	return nil, fmt.Errorf("could not find config with key %s", key)
+	return nil, fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
+}
+
+func GetAllConfig() (map[string]interface{}, error) {
+	var config map[string]interface{}
+	if _, err := os.Stat(CONFIG_FILE_PATH); err != nil {
+		slog.Error("GetAllConfig", "file stat error", err)
+		return nil, err
+	}
+
+	if _, err := os.Stat(CONFIG_FILE_PATH); err == nil {
+		file, err := os.ReadFile(CONFIG_FILE_PATH)
+		if err != nil {
+			slog.Error("GetAllConfig", "config-file read", err)
+			return nil, err
+		}
+
+		if err := json.Unmarshal(file, &config); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal JSON: %v", err)
+		}
+	}
+	return config, nil
+}
+
+func FromConfig(config map[string]interface{}, key string) (interface{}, error) {
+	var res any
+	if val, ok := config[key]; !ok {
+		return "", fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
+	} else {
+		res = val
+	}
+	return res, nil
 }

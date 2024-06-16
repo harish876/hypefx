@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @get
 func WelcomeHandler(c echo.Context) error {
 	return Render(c, http.StatusOK, welcome.Welcome())
 }

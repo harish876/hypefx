@@ -7,6 +7,8 @@ import (
 	"strings"
 	"text/template"
 
+	"log/slog"
+
 	"github.com/harish876/hypefx/internal/generators/annotations"
 )
 
@@ -60,13 +62,13 @@ func Generator(templateParams TemplateParams) error {
 					routeName = pathToFile + "/:" + paramFileFormat[1]
 				}
 
-				// fmt.Println(
-				// 	"Handler Map: ", handlerDetails,
-				// 	"\nPackage Name: ", packageName,
-				// 	"\nFull Path: ", path,
-				// 	"\nRoute Name: ", routeName,
-				// 	"\n",
-				// )
+				slog.Debug(
+					"Generator",
+					"Handler Map: ", handlerDetails,
+					"Package Name: ", packageName,
+					"Full Path: ", path,
+					"Route Name: ", routeName,
+				)
 
 				var handlers []Handler
 				for _, val := range handlerDetails {

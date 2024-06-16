@@ -1,7 +1,9 @@
 package build
 
 import (
+	"errors"
 	"fmt"
+	"log/slog"
 	"os/exec"
 
 	"github.com/harish876/hypefx/internal/cli/commands"
@@ -10,24 +12,48 @@ import (
 )
 
 func build(cmd *cobra.Command, args []string) {
-	//this needs to set dynamically. autodetect this
-	basePath, _ := commands.GetConfig("basePath")
-	module, _ := commands.GetConfig("module")
-	routesDir, _ := commands.GetConfig("routesDir")
+	//single disk read
+	configs, err := commands.GetAllConfig()
+	if err != nil {
+		DisplayError(fmt.Errorf("unable to read hypeconfig.json: %s.\nuse hypefx generate [module_name] to get things started", err))
+		return
+	}
+	slog.Error("build", "error", err)
+	appDir, err := commands.FromConfig(configs, "appDir")
+	if err != nil {
+		DisplayError(err)
+		return
+	}
+	module, err := commands.FromConfig(configs, "module")
+	if err != nil {
+		DisplayError(err)
+		return
+	}
+	routesPath, err := commands.FromConfig(configs, "routesPath")
+	if err != nil {
+		DisplayError(err)
+		return
+	}
+
+	_, err = commands.FromConfig(configs, "routing")
+	if err != nil {
+		DisplayError(errors.Join(err, fmt.Errorf("enable routing to automagically build routes")))
+		return
+	}
 
 	templateParams := template.TemplateParams{
-		BasePath:            basePath.(string),      //config.get("basePath")
+		BasePath:            appDir.(string),        //config.get("appDir")
 		BaseImportPath:      module.(string),        //config.get("module")
 		TemplateName:        commands.TEMPLATE_NAME, // constant.routes
 		RouteDirPackageName: commands.TEMPLATE_NAME, // constant.routes
-		DestinationDir:      routesDir.(string),     //config.get("routeDir")
+		DestinationDir:      routesPath.(string),    //config.get("routeDir")
 	}
 
 	if err := template.Generator(templateParams); err != nil {
 		DisplayError(fmt.Errorf("error running template generator : %v", err))
 	}
 	fmtCmd := exec.Command("gofmt", "-w", templateParams.DestinationDir)
-	_, err := fmtCmd.CombinedOutput()
+	_, err = fmtCmd.CombinedOutput()
 	if err != nil {
 		DisplayError(fmt.Errorf("error formatting the routes file : %v", err))
 	}

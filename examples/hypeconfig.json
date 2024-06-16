@@ -1,5 +1,4 @@
 {
-    "basePath": "/home/harish/personal/hypefx/examples/app",
     "module": "github.com/harish876/hypefx/examples",
-    "routesDir": "/home/harish/personal/hypefx/examples/routes/routes.go"
+    "routesPath": "/home/harish/personal/hypefx/examples/routes/routes.go"
   }

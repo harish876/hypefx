@@ -10,12 +10,16 @@ import (
 )
 
 type model struct {
-	message string
+	message     string
+	description string
+	metdata     string
 }
 
-func FromMessage(message string) model {
+func FromMessage(message, description, metdata string) model {
 	return model{
 		message,
+		description,
+		metdata,
 	}
 }
 
@@ -48,9 +52,10 @@ func (m model) View() string {
 
 	style := lipgloss.NewStyle().
 		Bold(true).
-		AlignHorizontal(lipgloss.Center).
+		AlignHorizontal(lipgloss.Left).
+		Border(lipgloss.NormalBorder()).
 		Foreground(lipgloss.Color("#0EA5E9")).
-		Padding(2)
+		Padding(1)
 
-	return asciiArt + "\n" + style.Render("Build Simple Web Apps using Go,Tailwind,Templ and HTMX") + "\n"
+	return asciiArt + "\n" + style.Render(m.description+"\n"+m.metdata) + "\n"
 }

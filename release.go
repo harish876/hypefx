@@ -1,3 +1,5 @@
+//go:build !test
+
 package main
 
 import (
@@ -6,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/harish876/hypefx/internal/cli/commands"
 	"github.com/harish876/hypefx/internal/cli/commands/add"
 	"github.com/harish876/hypefx/internal/cli/commands/build"
 	"github.com/harish876/hypefx/internal/cli/commands/generate"
@@ -22,19 +25,25 @@ var components embed.FS
 func main() {
 	loggerConfig := utils.FromConfig(filepath.Join("tmp", "hypefx.log"))
 	jsonHandler := slog.NewJSONHandler(loggerConfig, &slog.HandlerOptions{
-		Level: utils.FromLogLevel("Debug"),
+		AddSource: true,
+		Level:     utils.FromLogLevel("level"),
 	})
 	slog.SetDefault(slog.New(jsonHandler))
 
 	rootCmd := &cobra.Command{
 		Use:   "hypefx",
 		Short: "A simple CLI tool to bootstrap Go + HTMX + Templ Projects.",
-		Run:   version.Welcome,
+		Run: func(cmd *cobra.Command, args []string) {
+			version.Welcome(cmd, args, map[string]string{
+				"buildEnv": "release",
+			})
+		},
+		ValidArgs: []string{"generate", "build", "set", "unset", "add"},
 	}
 
 	//this needs access to components.to be refactored
 	var addCmd = &cobra.Command{
-		Use:     "add [compoent_name] [project_name/module_name](optional)",
+		Use:     "add [component_name] [project_name/module_name](optional)",
 		Short:   "Add a new component from the component library",
 		Long:    `Add a new component from the component library , and customise it as per your liking`,
 		Args:    cobra.ExactArgs(1),
@@ -44,16 +53,20 @@ func main() {
 		},
 	}
 	//Init Command Flags
-	slog.Info("CLI Initialization done")
+	slog.Info("CLI Initialization done. Build tag is release")
 	rootCmd.Flags().BoolP("version", "v", false, "Display CLI Version")
 	set.InitFlags()
 
-	// Add Commands
+	//add autocompletion
+	addCmd.CompletionOptions.DisableDefaultCmd = true
+
+	// Add Command
 	rootCmd.AddCommand(generate.GenerateCmd)
 	rootCmd.AddCommand(set.SetCmd)
 	rootCmd.AddCommand(unset.UnsetCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(build.BuildCmd)
+	rootCmd.AddCommand(commands.CompletionCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		slog.Error("rootCmd", err)
