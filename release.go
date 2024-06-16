@@ -43,11 +43,12 @@ func main() {
 
 	//this needs access to components.to be refactored
 	var addCmd = &cobra.Command{
-		Use:     "add [component_name] [project_name/module_name](optional)",
-		Short:   "Add a new component from the component library",
-		Long:    `Add a new component from the component library , and customise it as per your liking`,
-		Args:    cobra.ExactArgs(1),
-		Example: "hype add grid",
+		Use:       "add [component_name] [project_name/module_name](optional)",
+		Short:     "Add a new component from the component library",
+		Long:      `Add a new component from the component library , and customise it as per your liking`,
+		Args:      cobra.ExactArgs(1),
+		Example:   "hype add grid",
+		ValidArgs: []string{"notfound", "grid", "input", "dropdown", "notification"},
 		Run: func(cmd *cobra.Command, args []string) {
 			add.Add(cmd, args, components)
 		},
