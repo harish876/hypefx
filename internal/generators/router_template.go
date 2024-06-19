@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,13 +49,13 @@ func Runner(basePath string) {
 	})
 
 	if err != nil {
-		fmt.Printf("Error walking the path: %v\n", err)
+		slog.Error("Runner", "Error walking the path:", err.Error())
 		return
 	}
 
 	err = generateHandlerFile(routes)
 	if err != nil {
-		fmt.Printf("Error generating handler file: %v\n", err)
+		slog.Error("Runner", "Error generating handler file:", err.Error())
 		return
 	}
 }

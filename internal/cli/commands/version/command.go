@@ -9,7 +9,7 @@ import (
 
 var (
 	MESSAGE string = "Hype"
-	VERSION string = "0.0.3"
+	VERSION string = "0.0.4"
 )
 
 func Welcome(cmd *cobra.Command, args []string, buildFlags map[string]string) {

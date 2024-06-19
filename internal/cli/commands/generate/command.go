@@ -73,8 +73,10 @@ func generate(cmd *cobra.Command, args []string) {
 		return
 	}
 	appDir, _ := commands.FromConfig(configs, "appDir")
-	routePath, _ := commands.FromConfig(configs, "routesPath")
+	routesPath, _ := commands.FromConfig(configs, "routesPath")
 	routing, _ := commands.FromConfig(configs, "routing")
+
+	slog.Debug("generate", "file config", "appDir", appDir, "routesPath", routesPath, "routing", routing)
 
 	basePath, _ := os.Getwd()
 	if appDir == nil {
@@ -82,7 +84,7 @@ func generate(cmd *cobra.Command, args []string) {
 		slog.Debug("generate", "set appDir", path)
 		commands.UpsertConfig("appDir", path) //default can be overriden. check it this is set first
 	}
-	if routePath == nil {
+	if routesPath == nil {
 		path := filepath.Join(basePath, "routes", "routes.go")
 		slog.Debug("generate", "set routesPath", path)
 		commands.UpsertConfig("routesPath", path) //default can be overriden. check it this is set first
@@ -104,6 +106,8 @@ func copyDirectory(src, dst, moduleName string) error {
 	for _, file := range files {
 		sourcePath := filepath.Join(src, file.Name())
 		destPath := filepath.Join(dst, file.Name())
+
+		slog.Debug("copyDirectory", "file name", file.Name(), "file type", file.Type().IsRegular())
 
 		if file.IsDir() {
 			if err := os.MkdirAll(destPath, 0755); err != nil {

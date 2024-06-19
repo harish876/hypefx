@@ -116,7 +116,7 @@ func GetAllConfig() (map[string]interface{}, error) {
 func FromConfig(config map[string]interface{}, key string) (interface{}, error) {
 	var res any
 	if val, ok := config[key]; !ok {
-		return "", fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
+		return nil, fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
 	} else {
 		res = val
 	}

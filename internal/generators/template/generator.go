@@ -95,13 +95,13 @@ func Generator(templateParams TemplateParams) error {
 	})
 
 	if err != nil {
-		fmt.Printf("Error walking the path: %v\n", err)
+		slog.Error("Generator", "Error walking the path:", err.Error())
 		return err
 	}
 
 	err = generateHandlerFile(routes, templateParams)
 	if err != nil {
-		fmt.Printf("Error generating handler file: %v\n", err)
+		slog.Error("Generator", "Error generating handler file:", err.Error())
 		return err
 	}
 	return nil
