@@ -73,10 +73,10 @@ func generate(cmd *cobra.Command, args []string) {
 		return
 	}
 	appDir, _ := commands.FromConfig(configs, "appDir")
-	routesPath, _ := commands.FromConfig(configs, "routesPath")
+	routesDir, _ := commands.FromConfig(configs, "routesDir")
 	routing, _ := commands.FromConfig(configs, "routing")
 
-	slog.Debug("generate", "file config", "appDir", appDir, "routesPath", routesPath, "routing", routing)
+	slog.Debug("generate", "file config", "appDir", appDir, "routesDir", routesDir, "routing", routing)
 
 	basePath, _ := os.Getwd()
 	if appDir == nil {
@@ -84,10 +84,10 @@ func generate(cmd *cobra.Command, args []string) {
 		slog.Debug("generate", "set appDir", path)
 		commands.UpsertConfig("appDir", path) //default can be overriden. check it this is set first
 	}
-	if routesPath == nil {
-		path := filepath.Join(basePath, "routes", "routes.go")
-		slog.Debug("generate", "set routesPath", path)
-		commands.UpsertConfig("routesPath", path) //default can be overriden. check it this is set first
+	if routesDir == nil {
+		path := filepath.Join(basePath, "routes")
+		slog.Debug("generate", "set routesDir", path)
+		commands.UpsertConfig("routesDir", path) //default can be overriden. check it this is set first
 	}
 	if routing == nil {
 		slog.Debug("generate", "set routing", true)
