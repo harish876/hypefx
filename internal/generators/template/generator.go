@@ -149,13 +149,13 @@ func RegisterRoutes(e *echo.Echo) {
 		Routes:  routes,
 	}
 
-	file, err := os.Create(templateParams.DestinationDir) //revisit this madness
+	file, err := os.Create(filepath.Join(templateParams.DestinationDir, "routes.go"))
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	tmpl, err := template.New("routes").Parse(tpl)
+	tmpl, err := template.New(templateParams.TemplateName).Parse(tpl)
 	if err != nil {
 		return err
 	}

@@ -6,10 +6,15 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/harish876/hypefx/internal/cli/commands"
 	"github.com/harish876/hypefx/internal/generators/template"
 	"github.com/spf13/cobra"
+)
+
+var (
+	ROUTES_FILE = "routes.go"
 )
 
 func build(cmd *cobra.Command, args []string) {
@@ -29,8 +34,8 @@ func build(cmd *cobra.Command, args []string) {
 		DisplayError(err)
 		return
 	}
-	routesPath, err := commands.FromConfig(configs, "routesPath")
-	if err != nil || routesPath == nil {
+	routesDir, err := commands.FromConfig(configs, "routesDir")
+	if err != nil || routesDir == nil {
 		DisplayError(err)
 		return
 	}
@@ -41,22 +46,19 @@ func build(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if _, err := os.Stat(routesPath.(string)); err != nil {
-		slog.Error("buid", "error type", err.Error())
-		if file, err := os.Create(routesPath.(string)); err != nil {
-			slog.Error("build", "creating routes path", err.Error())
-			defer file.Close()
-		}
-		slog.Debug("build", "creating routes path dir", "created routes path dir successfully")
-
+	os.MkdirAll(routesDir.(string), os.ModePerm)
+	if file, err := os.Create(filepath.Join(routesDir.(string), ROUTES_FILE)); err != nil {
+		slog.Error("build", "creating routes path", err.Error())
+		defer file.Close()
 	}
+	slog.Debug("build", "creating routes path dir", "created routes path dir successfully")
 
 	templateParams := template.TemplateParams{
 		BasePath:            appDir.(string),        //config.get("appDir")
 		BaseImportPath:      module.(string),        //config.get("module")
 		TemplateName:        commands.TEMPLATE_NAME, // constant.routes
 		RouteDirPackageName: commands.TEMPLATE_NAME, // constant.routes
-		DestinationDir:      routesPath.(string),    //config.get("routeDir")
+		DestinationDir:      routesDir.(string),     //config.get("routeDir")
 	}
 
 	if err := template.Generator(templateParams); err != nil {
