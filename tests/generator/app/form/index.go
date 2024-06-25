@@ -6,7 +6,7 @@ import (
 	"regexp"
 
 	"github.com/harish876/hypefx/components/props"
-	"github.com/harish876/hypefx/examples/views/form"
+	"github.com/harish876/hypefx/tests/generator/views/form"
 	renderer "github.com/harish876/hypefx/internal/generators/template"
 	"github.com/labstack/echo/v4"
 )

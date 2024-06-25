@@ -3,8 +3,8 @@ package app
 import (
 	"net/http"
 
-	"github.com/harish876/hypefx/examples/views/home"
 	"github.com/harish876/hypefx/internal/generators/template"
+	"github.com/harish876/hypefx/tests/generator/views/home"
 	"github.com/labstack/echo/v4"
 )
 
