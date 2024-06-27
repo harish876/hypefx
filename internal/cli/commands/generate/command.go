@@ -72,22 +72,22 @@ func generate(cmd *cobra.Command, args []string) {
 		slog.Debug("generate", "scaffolding error", err)
 		return
 	}
-	appDir, _ := commands.FromConfig(configs, "appDir")
-	routesDir, _ := commands.FromConfig(configs, "routesDir")
+	appDir, _ := commands.FromConfig(configs, "app_dir")
+	routesDir, _ := commands.FromConfig(configs, "routes_dir")
 	routing, _ := commands.FromConfig(configs, "routing")
 
-	slog.Debug("generate", "file config", "appDir", appDir, "routesDir", routesDir, "routing", routing)
+	slog.Debug("generate", "file config", "app_dir", appDir, "routes_dir", routesDir, "routing", routing)
 
 	basePath, _ := os.Getwd()
 	if appDir == nil {
 		path := filepath.Join(basePath, "app")
-		slog.Debug("generate", "set appDir", path)
-		commands.UpsertConfig("appDir", path) //default can be overriden. check it this is set first
+		slog.Debug("generate", "set app_dir", path)
+		commands.UpsertConfig("app_dir", path) //default can be overriden. check it this is set first
 	}
 	if routesDir == nil {
 		path := filepath.Join(basePath, "routes")
-		slog.Debug("generate", "set routesDir", path)
-		commands.UpsertConfig("routesDir", path) //default can be overriden. check it this is set first
+		slog.Debug("generate", "set routes_dir", path)
+		commands.UpsertConfig("routes_dir", path) //default can be overriden. check it this is set first
 	}
 	if routing == nil {
 		slog.Debug("generate", "set routing", true)

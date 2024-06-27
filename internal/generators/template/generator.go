@@ -20,8 +20,14 @@ type Route struct {
 }
 
 type Handler struct {
-	Name       string
-	HttpMethod string
+	Name      string
+	Directive string
+	//unpack directive params to struct field
+	Page string
+	Url  string
+
+	IsStatic bool
+	FileName string
 }
 
 func Generator(templateParams TemplateParams) error {
@@ -73,10 +79,18 @@ func Generator(templateParams TemplateParams) error {
 				var handlers []Handler
 				for _, val := range handlerDetails {
 
-					handlers = append(handlers, Handler{
-						Name:       val.HandlerName,
-						HttpMethod: annotations.FromEnum(val.Method),
-					})
+					var handler Handler
+					handler.Name = val.HandlerName
+					handler.Directive = annotations.FromEnum(val.Direcive)
+					handler.Page = strings.ReplaceAll(val.DirectiveParams["page"], `"`, "")
+					handler.Url = val.DirectiveParams["url"]
+					handler.IsStatic = val.Direcive == annotations.STATIC
+
+					if handler.IsStatic {
+						slog.Debug("Generator", "Params", val.DirectiveParams)
+						handlerStaticFileGeneration()
+					}
+					handlers = append(handlers, handler)
 				}
 
 				routes = append(routes, Route{
@@ -85,10 +99,11 @@ func Generator(templateParams TemplateParams) error {
 					RouteName:   routeName,
 					Handlers:    handlers,
 				})
+			} else {
+				slog.Error("Generator", "file types other than index.go not implemented yet.file name", path)
 			}
 		} else {
 			//do something specific to different file patterns
-			//fmt.Println("file types other than index.go not implemented yet.continuing execution for other...")
 			return nil
 		}
 		return nil
@@ -122,9 +137,12 @@ func RegisterRoutes(e *echo.Echo) {
 {{- range $idx, $route := .Routes }}
 
 	apiGroup{{$idx}} := e.Group("{{$route.RouteName}}")
-
 	{{- range .Handlers}}
-		apiGroup{{$idx}}.{{.HttpMethod}}("",{{$route.PackageName}}.{{.Name}})
+		{{- if .IsStatic}}
+			apiGroup{{$idx}}.File("","public/{{.Page}}")
+		{{- else }}
+			apiGroup{{$idx}}.{{.Directive}}("",{{$route.PackageName}}.{{.Name}})
+		{{- end }}
 	{{- end }}
 
 {{- end }}
@@ -133,6 +151,7 @@ func RegisterRoutes(e *echo.Echo) {
 
 	importMap := make(map[string]struct{})
 	for _, route := range routes {
+		slog.Debug("generateHanlderFile", "imports", route.RouteGroup)
 		importMap[route.RouteGroup] = struct{}{}
 	}
 
@@ -161,4 +180,8 @@ func RegisterRoutes(e *echo.Echo) {
 	}
 
 	return tmpl.Execute(file, data)
+}
+
+func handlerStaticFileGeneration() error {
+	return nil
 }

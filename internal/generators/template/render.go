@@ -10,3 +10,7 @@ func Render(ctx echo.Context, statusCode int, t templ.Component) error {
 	ctx.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTML)
 	return t.Render(ctx.Request().Context(), ctx.Response().Writer)
 }
+
+func StaticRender(ctx echo.Context, statusCode int, t templ.Component) error {
+	return nil
+}

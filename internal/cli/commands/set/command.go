@@ -29,7 +29,7 @@ var (
 	OPTIONS = []Flags{
 		{
 			typ:       STRING,
-			name:      "appDir",
+			name:      "app_dir",
 			shorthand: "a",
 			usage:     "Set the Directory of your app directory. Default [pwd]/app",
 		},
@@ -41,7 +41,7 @@ var (
 		},
 		{
 			typ:       STRING,
-			name:      "routePath",
+			name:      "route_dir",
 			shorthand: "p",
 			usage:     "Set the Base file path for your routes directory. Default [pwd]/routes/routes.go ",
 		},

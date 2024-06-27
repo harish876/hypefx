@@ -23,7 +23,7 @@ func Add(cmd *cobra.Command, args []string, components embed.FS) {
 	componentName := args[0]
 	moduleName, err := commands.GetConfig("module")
 	if err != nil || moduleName == nil {
-		slog.Error("add", err)
+		slog.Error("Add", "add", err)
 	}
 	if len(args) >= 1 {
 		moduleName = args[0]

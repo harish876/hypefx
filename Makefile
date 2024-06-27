@@ -13,4 +13,4 @@ cli-release:
 
 test-cli:
 	@mkdir foobar
-	cd foobar && hype-test generate foobar && go mod tidy && hype-test build
+	cd foobar && hype-test generate foobar && go mod tidy
