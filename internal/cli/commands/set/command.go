@@ -55,12 +55,25 @@ var (
 )
 
 func setConfig(cmd *cobra.Command, args []string) {
+	config, err := commands.GetConfig()
+	if err != nil {
+		DisplayError(err)
+		return
+	}
 	for _, option := range OPTIONS {
 		switch option.typ {
 		case STRING:
 			flag, _ := cmd.Flags().GetString(option.name)
 			if flag != "" {
-				if err := commands.UpsertConfig(option.name, flag); err != nil {
+				switch option.name {
+				case "appDir":
+					config.AppDir = flag
+				case "module":
+					config.Module = flag
+				case "routesDir":
+					config.RoutesDir = flag
+				}
+				if err := commands.SetConfig(config); err != nil {
 					slog.Error("setConfig", option.name, flag, err)
 					DisplayError(fmt.Errorf("unable to set %s with value %s", option.name, flag))
 				} else {
@@ -71,8 +84,12 @@ func setConfig(cmd *cobra.Command, args []string) {
 		case BOOL:
 			flag, _ := cmd.Flags().GetBool(option.name)
 			if flag {
-				if err := commands.UpsertConfig(option.name, flag); err != nil {
-					slog.Error("setConfig", option.name, flag, err)
+				switch option.name {
+				case "routing":
+					config.Routing = true
+				}
+				if err := commands.SetConfig(config); err != nil {
+					slog.Error("setConfig", option.name, flag, err.Error())
 					DisplayError(fmt.Errorf("unable to set %s with value %v", option.name, flag))
 				} else {
 					DisplaySuccessMessage(fmt.Sprintf("Successfully set %s as %v", option.name, flag))

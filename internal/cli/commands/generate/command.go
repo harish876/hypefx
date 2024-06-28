@@ -35,22 +35,24 @@ func generate(cmd *cobra.Command, args []string) {
 	var errorInterface error
 	var moduleName interface{}
 
-	configs, err := commands.GetAllConfig()
+	config, err := commands.GetConfig()
 	if err != nil {
 		slog.Error("generate", "GetAllConfig func call", err)
+		errorInterface = errors.Join(err, fmt.Errorf("unable to get config file"))
+		DisplayError(errorInterface)
+		return
 	}
 	if len(args) >= 1 {
 		moduleName = args[0]
-		commands.UpsertConfig("module", moduleName.(string))
-	} else {
-		modName, err := commands.FromConfig(configs, "module")
-		slog.Debug("generate", "moduleName", modName)
-		if err != nil {
-			errorInterface = errors.Join(err, fmt.Errorf("unable to find module name. use hype set --module [module_name]"))
-			DisplayError(errorInterface)
+		config.Module = moduleName.(string)
+		if err := commands.SetConfig(config); err != nil {
+			DisplayError(err)
 			return
 		}
-		if modName == nil && len(args) == 0 {
+	} else {
+		modName := config.Module
+		slog.Debug("generate", "moduleName", modName)
+		if modName == "" && len(args) == 0 {
 			errorInterface = fmt.Errorf("unable to find module name. use hype generate [module_name] to automagically perform the initializations")
 			DisplayError(errorInterface)
 			return
@@ -72,26 +74,26 @@ func generate(cmd *cobra.Command, args []string) {
 		slog.Debug("generate", "scaffolding error", err)
 		return
 	}
-	appDir, _ := commands.FromConfig(configs, "appDir")
-	routesDir, _ := commands.FromConfig(configs, "routesDir")
-	routing, _ := commands.FromConfig(configs, "routing")
-
-	slog.Debug("generate", "file config", "appDir", appDir, "routesDir", routesDir, "routing", routing)
+	slog.Debug("generate", "file config", config)
 
 	basePath, _ := os.Getwd()
-	if appDir == nil {
+	if config.AppDir == "" {
 		path := filepath.Join(basePath, "app")
 		slog.Debug("generate", "set appDir", path)
-		commands.UpsertConfig("appDir", path) //default can be overriden. check it this is set first
+		config.AppDir = path
 	}
-	if routesDir == nil {
+	if config.RoutesDir == "" {
 		path := filepath.Join(basePath, "routes")
 		slog.Debug("generate", "set routesDir", path)
-		commands.UpsertConfig("routesDir", path) //default can be overriden. check it this is set first
+		config.RoutesDir = path
 	}
-	if routing == nil {
+	if !config.Routing {
 		slog.Debug("generate", "set routing", true)
-		commands.UpsertConfig("routing", true) //default can be overriden. check it this is set first
+		config.Routing = true
+	}
+	if err := commands.SetConfig(config); err != nil {
+		DisplayError(err)
+		return
 	}
 	message = fmt.Sprintf("Successfully Instantiated a Hype FX Project in module %s\n\n1.Run `go mod tidy`\n2.Run `npm install` or `npm i`\n4.Start the dev server using `npm run dev`\n4.😅 no more of this npm business.custom build command coming soon...\n5.And.. you can find CLI logs at tmp/hypefx.log", moduleName.(string))
 	DisplayMessage(message)

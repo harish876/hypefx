@@ -21,15 +21,18 @@ var (
 
 func Add(cmd *cobra.Command, args []string, components embed.FS) {
 	componentName := args[0]
-	moduleName, err := commands.GetConfig("module")
-	if err != nil || moduleName == nil {
-		slog.Error("add", err)
+	config, _ := commands.GetConfig()
+	moduleName := config.Module
+	if moduleName == "" {
+		slog.Error("add", fmt.Errorf("module name empty"))
+		fmt.Println("module name empty") //todo revamp
 	}
 	if len(args) >= 1 {
 		moduleName = args[0]
-		commands.UpsertConfig("module", moduleName)
+		config.Module = moduleName
+		commands.SetConfig(config)
 	}
-	MODULE_NAME = moduleName.(string)
+	MODULE_NAME = moduleName
 	currDir, err := os.Getwd()
 	if err != nil {
 		slog.Error("add", "Error Getting the current directory: ", err)

@@ -7,33 +7,26 @@ import (
 	"os"
 )
 
-var (
-	TEMPLATE_NAME = "routes"
-)
+type StaticFile struct {
+	Package   string `json:"package"`
+	Component string `json:"component"`
+	FileName  string `json:"fileName"`
+}
 
-func UpsertConfig(key string, value interface{}) error {
-	var config map[string]interface{}
-	if _, err := os.Stat(CONFIG_FILE_PATH); err == nil {
-		file, err := os.ReadFile(CONFIG_FILE_PATH)
-		if err != nil {
-			return fmt.Errorf("failed to read file: %v", err)
-		}
+type HypeConfig struct {
+	AppDir      string       `json:"appDir"`
+	Module      string       `json:"module"`
+	RoutesDir   string       `json:"routesDir"`
+	Routing     bool         `json:"routing"`
+	StaticFiles []StaticFile `json:"staticFiles"`
+}
 
-		if err := json.Unmarshal(file, &config); err != nil {
-			return fmt.Errorf("failed to unmarshal JSON: %v", err)
-		}
-	} else {
-		config = make(map[string]interface{})
-	}
-
-	config[key] = value
-
-	updatedConfig, err := json.MarshalIndent(config, "", "  ")
+func SetConfig(newConfig HypeConfig) error {
+	updatedJsonConfig, err := json.MarshalIndent(newConfig, "", "  ")
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON: %v", err)
 	}
-
-	if err := os.WriteFile(CONFIG_FILE_PATH, updatedConfig, 0644); err != nil {
+	if err := os.WriteFile(CONFIG_FILE_PATH, updatedJsonConfig, 0644); err != nil {
 		return fmt.Errorf("failed to write file: %v", err)
 	}
 
@@ -55,9 +48,7 @@ func DeleteConfig(key string) error {
 		config = make(map[string]interface{})
 	}
 
-	if _, ok := config[key]; ok {
-		delete(config, key)
-	}
+	delete(config, key)
 
 	updatedConfig, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
@@ -71,54 +62,36 @@ func DeleteConfig(key string) error {
 	return nil
 }
 
-func GetConfig(key string) (interface{}, error) {
-	var config map[string]interface{}
-	if _, err := os.Stat(CONFIG_FILE_PATH); err == nil {
-		file, err := os.ReadFile(CONFIG_FILE_PATH)
-		if err != nil {
-			return nil, fmt.Errorf("failed to read file: %v", err)
-		}
-
-		if err := json.Unmarshal(file, &config); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal JSON: %v", err)
-		}
-	} else {
-		config = make(map[string]interface{})
-	}
-
-	if value, ok := config[key]; ok {
-		return value, nil
-	}
-	return nil, fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
-}
-
-func GetAllConfig() (map[string]interface{}, error) {
-	var config map[string]interface{}
-	if _, err := os.Stat(CONFIG_FILE_PATH); err != nil {
+func GetConfig() (HypeConfig, error) {
+	var config HypeConfig
+	if _, err := os.Stat(CONFIG_FILE_PATH); err != nil && os.IsNotExist(err) {
 		slog.Error("GetAllConfig", "file stat error", err)
-		return nil, err
+		if err := InitConfig(); err != nil {
+			return config, err
+		}
 	}
 
 	if _, err := os.Stat(CONFIG_FILE_PATH); err == nil {
 		file, err := os.ReadFile(CONFIG_FILE_PATH)
 		if err != nil {
 			slog.Error("GetAllConfig", "config-file read", err)
-			return nil, err
+			return config, err
 		}
 
 		if err := json.Unmarshal(file, &config); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal JSON: %v", err)
+			return config, fmt.Errorf("failed to unmarshal JSON: %v", err)
 		}
 	}
 	return config, nil
 }
 
-func FromConfig(config map[string]interface{}, key string) (interface{}, error) {
-	var res any
-	if val, ok := config[key]; !ok {
-		return nil, fmt.Errorf("unable to find %s in hypeconfig.json. use hypefx set --%s [%s]", key, key, key)
-	} else {
-		res = val
+func InitConfig() error {
+	f, err := os.Create(CONFIG_FILE_PATH)
+	if err != nil {
+		return err
 	}
-	return res, nil
+	defer f.Close()
+	var config HypeConfig
+	SetConfig(config)
+	return nil
 }

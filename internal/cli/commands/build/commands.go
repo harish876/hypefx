@@ -19,46 +19,43 @@ var (
 
 func build(cmd *cobra.Command, args []string) {
 	//single disk read
-	configs, err := commands.GetAllConfig()
+	config, err := commands.GetConfig()
 	if err != nil {
 		DisplayError(fmt.Errorf("unable to read hypeconfig.json: %s.\nuse hypefx generate [module_name] to get things started", err))
 		return
 	}
-	appDir, err := commands.FromConfig(configs, "appDir")
-	if err != nil || appDir == nil {
+	if config.AppDir == "" {
 		DisplayError(err)
 		return
 	}
-	module, err := commands.FromConfig(configs, "module")
-	if err != nil || module == nil {
+	if config.Module == "" {
 		DisplayError(err)
 		return
 	}
-	routesDir, err := commands.FromConfig(configs, "routesDir")
-	if err != nil || routesDir == nil {
+	if config.RoutesDir == "" {
 		DisplayError(err)
 		return
 	}
 
-	_, err = commands.FromConfig(configs, "routing")
-	if err != nil {
+	if !config.Routing {
 		DisplayError(errors.Join(err, fmt.Errorf("enable routing to automagically build routes")))
 		return
 	}
 
-	os.MkdirAll(routesDir.(string), os.ModePerm)
-	if file, err := os.Create(filepath.Join(routesDir.(string), ROUTES_FILE)); err != nil {
+	routesDir := config.RoutesDir
+	os.MkdirAll(routesDir, os.ModePerm)
+	if file, err := os.Create(filepath.Join(routesDir, ROUTES_FILE)); err != nil {
 		slog.Error("build", "creating routes path", err.Error())
 		defer file.Close()
 	}
 	slog.Debug("build", "creating routes path dir", "created routes path dir successfully")
 
 	templateParams := template.TemplateParams{
-		BasePath:            appDir.(string),        //config.get("appDir")
-		BaseImportPath:      module.(string),        //config.get("module")
+		BasePath:            config.AppDir,          //config.get("appDir")
+		BaseImportPath:      config.Module,          //config.get("module")
 		TemplateName:        commands.TEMPLATE_NAME, // constant.routes
 		RouteDirPackageName: commands.TEMPLATE_NAME, // constant.routes
-		DestinationDir:      routesDir.(string),     //config.get("routeDir")
+		DestinationDir:      routesDir,              //config.get("routeDir")
 	}
 
 	if err := template.Generator(templateParams); err != nil {
