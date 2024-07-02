@@ -2,7 +2,7 @@
 
 ## Hypefx - Build Simple SPA's using Go and HTMX
 
-High performance, extensible, minimalist Go web framework.
+Framework to build Web Apps using Go and HTMX.
 
 ### Feature Overview
  
