@@ -58,7 +58,7 @@ func main() {
     //Add this line as below
     routes.RegisterRoutes(app)
 
-	app.Logger.Fatal(app.Start(":42070"))
+    app.Logger.Fatal(app.Start(":42070"))
 }
 ```
 
