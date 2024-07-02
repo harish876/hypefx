@@ -1,11 +1,14 @@
 package annotations
 
 import (
-	"fmt"
+	"log/slog"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetHandlerDetailsFromAnnotations(t *testing.T) {
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 	sourceCode := []byte(`
 package form
 
@@ -59,7 +62,8 @@ func GetSomethingSlick(c echo.Context) error {
 	if err != nil {
 		t.Fail()
 	}
-	fmt.Println(handlerDetails, packageName)
+	assert.Equal(t, packageName, "form")
+	assert.Equal(t, len(handlerDetails), 2)
 }
 func TestGetHandlerDetailsFromAnnotationsNoAnnotations(t *testing.T) {
 	sourceCode := []byte(`
@@ -115,5 +119,6 @@ func GetSomethingSlick(c echo.Context) error {
 	if err != nil {
 		t.Fail()
 	}
-	fmt.Println(handlerDetails, packageName)
+	assert.Equal(t, packageName, "form")
+	assert.Equal(t, len(handlerDetails), 0)
 }

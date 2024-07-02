@@ -2,5 +2,6 @@
   "appDir": "/Users/harishgokul/HypeFX/foobar/app",
   "module": "foobar",
   "routesDir": "/Users/harishgokul/HypeFX/foobar/routes",
-  "routing": true
+  "routing": true,
+  "staticFiles": [{}]
 }

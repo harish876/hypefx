@@ -1,0 +1,24 @@
+<!doctype html><html lang="en" data-theme=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Go/Echo+Templ: Some Exploration for GO HTMX and Templ"><meta name="google" content="notranslate"><link rel="shortcut icon" href="/img/templ.png" type="image/png"><link rel="stylesheet" href="/css/styles.css"><title>Home Page</title><script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script src="https://unpkg.com/hyperscript.org@0.9.12"></script><!-- Alpine.js --><!-- Alpine Plugins --><script defer src="https://unpkg.com/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script><!-- Alpine Core --><script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script><script>
+                /* Script to toggle light and  mode */
+            </script><script src="/js/confirm.js" defer></script><link rel="stylesheet" href="/css/static.css"></head><body hx-boost="true"><layout class="main-content flex flex-row flex-grow p-4"><div class="flex justify-center mx-auto"><section><div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16"><div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16"><div class="relative h-64 overflow-hidden rounded-lg sm:h-80 lg:order-last lg:h-full"><img alt="" src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1770&amp;q=80" class="absolute inset-0 h-full w-full object-cover"></div><div class="lg:py-24"><h2 class="text-3xl font-bold sm:text-4xl">Grow your audience</h2><p class="mt-4 text-gray-600">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut qui hic atque tenetur quis eius quos ea neque sunt, accusantium soluta minus veniam tempora deserunt? Molestiae eius quidem quam repellat.</p><a href="#" class="mt-8 inline-block rounded bg-indigo-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-yellow-400">Get Started Today</a></div></div></div></section></div></layout><script lang="js">
+			     document.body.addEventListener('htmx:beforeSwap', function(evt) {
+			    if(evt.detail.xhr.status === 404){
+			        // alert the user when a 404 occurs (maybe use a nicer mechanism than alert())
+			        alert("Error: Could Not Find Resource");
+			    } else if(evt.detail.xhr.status === 422){
+			        // allow 422 responses to swap as we are using this as a signal that
+			        // a form was submitted with bad data and want to rerender with the
+			        // errors
+			        //
+			        // set isError to false to avoid error logging in console
+                    alert("Bad Request Debug")
+			        evt.detail.shouldSwap = true;
+			        evt.detail.isError = false;
+			    } else if(evt.detail.xhr.status === 418){
+			        // if the response code 418 (I'm a teapot) is returned, retarget the
+			        // content of the response to the element with the id `teapot`s
+			        evt.detail.shouldSwap = true;
+			        evt.detail.target = htmx.find("#teapot");
+			    }
+			});
+			</script></body></html>

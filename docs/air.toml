@@ -2,8 +2,7 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-  bin = "./tmp/main"
-  cmd = "templ generate && go build -o ./tmp/main ./cmd/main.go"
+  cmd = "make docs"
   delay = 1000
   exclude_dir = ["tmp", "vendor","node_modules"]
   exclude_file = []
@@ -17,6 +16,9 @@ tmp_dir = "tmp"
   log = "build-errors.log"
   send_interrupt = false
   stop_on_error = true
+
+[events]
+  prebuild = "echo prebuild"
 
 [color]
   app = ""

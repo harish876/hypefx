@@ -1,0 +1,18 @@
+{
+  "appDir": "/Users/harishgokul/HypeFX/docs/app",
+  "module": "github.com/harish876/hypefx/docs",
+  "routesDir": "/Users/harishgokul/HypeFX/docs/routes",
+  "routing": true,
+  "staticFiles": [
+    {
+      "package": "layout",
+      "component": "Base",
+      "fileName": "public/home.html"
+    },
+    {
+      "package": "installation",
+      "component": "Installation",
+      "fileName": "public/installation.html"
+    }
+  ]
+}

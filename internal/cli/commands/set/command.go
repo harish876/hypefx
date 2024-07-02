@@ -41,7 +41,7 @@ var (
 		},
 		{
 			typ:       STRING,
-			name:      "routePath",
+			name:      "routesDir",
 			shorthand: "p",
 			usage:     "Set the Base file path for your routes directory. Default [pwd]/routes/routes.go ",
 		},
@@ -89,7 +89,7 @@ func setConfig(cmd *cobra.Command, args []string) {
 					config.Routing = true
 				}
 				if err := commands.SetConfig(config); err != nil {
-					slog.Error("setConfig", option.name, flag, err.Error())
+					slog.Error("setConfig", option.name, flag, "error", err.Error())
 					DisplayError(fmt.Errorf("unable to set %s with value %v", option.name, flag))
 				} else {
 					DisplaySuccessMessage(fmt.Sprintf("Successfully set %s as %v", option.name, flag))

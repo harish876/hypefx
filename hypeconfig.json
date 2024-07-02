@@ -1,3 +1,7 @@
 {
-  "appDir": "/home/harish/personal/hypefx/examples/app"
+  "appDir": "/home/harish/personal/hypefx/examples/app",
+  "module": "github.com/harish876/hypefx/docs",
+  "routesDir": "/Users/harishgokul/HypeFX/routes",
+  "routing": false,
+  "staticFiles": null
 }
