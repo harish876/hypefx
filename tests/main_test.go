@@ -1,20 +1,24 @@
 package tests
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/harish876/hypefx/internal/generators/template"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTemplateGeneration(t *testing.T) {
+	pwd, err := os.Getwd()
+	assert.NoError(t, err, "Error getting pwd")
 	templateParams := template.TemplateParams{
-		BasePath:            "/home/harish/personal/hypefx/tests/generator/app",
+		BasePath:            fmt.Sprintf("%s/generator/app", pwd),
 		BaseImportPath:      "github.com/harish876/hypefx/tests/generator",
 		TemplateName:        "routes",
 		RouteDirPackageName: "routes",
-		DestinationDir:      "/home/harish/personal/hypefx/tests/generator/routes",
+		DestinationDir:      fmt.Sprintf("%s/generator/routes", pwd),
 	}
-	if err := template.Generator(templateParams); err != nil {
-		t.Fatalf("unable to generate templates: %v", err)
-	}
+	err = template.Generator(templateParams)
+	assert.NoError(t, err, "unable to generate templates")
 }

@@ -22,92 +22,105 @@ type Route struct {
 type Handler struct {
 	Name      string
 	Directive string
-	//unpack directive params to struct field
-	Page string
-	Url  string
-
-	IsStatic bool
-	FileName string
+	Page      string
+	Url       string
+	FileName  string
+	IsStatic  bool
+	IsDebug   bool
 }
 
 func Generator(templateParams TemplateParams) error {
 	var routes []Route
-	err := filepath.Walk(templateParams.BasePath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if !info.IsDir() {
-			relativePath := strings.TrimPrefix(path, templateParams.BasePath)
-			pathToFile := strings.TrimSuffix(relativePath, "/"+info.Name())
-
-			if strings.HasSuffix(info.Name(), "index.go") || strings.Contains(info.Name(), "param") {
-
-				fileContents, err := os.ReadFile(path)
-				if err != nil {
-					return err
-				}
-
-				handlerDetails, packageName, err := annotations.GetHandlerDetailsFromAnnotations(fileContents)
-				if err != nil {
-					return err
-				}
-				if len(handlerDetails) == 0 {
-					//revisit this block. bug, if one method is missed, there is not comparator
-					return fmt.Errorf("no annotations found. generator is unable to map the handler names to the routes. please add annotations to your routes for autogeneration or unset the routing flag: %s", path)
-				}
-
-				routeName := pathToFile
-
-				if strings.Contains(info.Name(), "param") {
-					fileName := strings.TrimSuffix(info.Name(), ".go")
-					paramFileFormat := strings.Split(fileName, "_")
-					if len(paramFileFormat) < 2 {
-						return fmt.Errorf("invalid param file format. it should be param_[param_name].go")
-					}
-					routeName = pathToFile + "/:" + paramFileFormat[1]
-				}
-
-				slog.Debug(
-					"Generator",
-					"Handler Map: ", handlerDetails,
-					"Package Name: ", packageName,
-					"Full Path: ", path,
-					"Route Name: ", routeName,
-				)
-
-				var handlers []Handler
-				for _, val := range handlerDetails {
-
-					var handler Handler
-					handler.Name = val.HandlerName
-					handler.Directive = annotations.FromEnum(val.Direcive)
-					handler.Page = strings.ReplaceAll(val.DirectiveParams["page"], `"`, "")
-					handler.Url = val.DirectiveParams["url"]
-					handler.IsStatic = val.Direcive == annotations.STATIC
-
-					if handler.IsStatic {
-						slog.Debug("Generator", "Params", val.DirectiveParams)
-						handlerStaticFileGeneration()
-					}
-					handlers = append(handlers, handler)
-				}
-
-				routes = append(routes, Route{
-					PackageName: packageName,
-					RouteGroup:  pathToFile,
-					RouteName:   routeName,
-					Handlers:    handlers,
-				})
-			} else {
-				slog.Error("Generator", "file types other than index.go not implemented yet.file name", path)
+	err := filepath.Walk(
+		templateParams.BasePath,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
 			}
-		} else {
-			//do something specific to different file patterns
+
+			if !info.IsDir() {
+				relativePath := strings.TrimPrefix(path, templateParams.BasePath)
+				pathToFile := strings.TrimSuffix(relativePath, "/"+info.Name())
+
+				if strings.HasSuffix(info.Name(), "index.go") ||
+					strings.Contains(info.Name(), "param") {
+
+					fileContents, err := os.ReadFile(path)
+					if err != nil {
+						return err
+					}
+
+					handlerDetails, packageName, err := annotations.GetHandlerDetailsFromAnnotations(
+						fileContents,
+					)
+					if err != nil {
+						return err
+					}
+					if len(handlerDetails) == 0 {
+						//revisit this block. bug, if one method is missed, there is not comparator
+						return fmt.Errorf(
+							"no annotations found. generator is unable to map the handler names to the routes. please add annotations to your routes for autogeneration or unset the routing flag: %s",
+							path,
+						)
+					}
+
+					routeName := pathToFile
+
+					if strings.Contains(info.Name(), "param") {
+						fileName := strings.TrimSuffix(info.Name(), ".go")
+						paramFileFormat := strings.Split(fileName, "_")
+						if len(paramFileFormat) < 2 {
+							return fmt.Errorf(
+								"invalid param file format. it should be param_[param_name].go",
+							)
+						}
+						routeName = pathToFile + "/:" + paramFileFormat[1]
+					}
+
+					slog.Debug(
+						"Generator",
+						"Handler Map: ", handlerDetails,
+						"Package Name: ", packageName,
+						"Full Path: ", path,
+						"Route Name: ", routeName,
+					)
+
+					var handlers []Handler
+					for _, val := range handlerDetails {
+
+						var handler Handler
+						handler.Name = val.HandlerName
+						handler.Directive = annotations.FromEnum(val.Direcive)
+						handler.Page = strings.ReplaceAll(val.DirectiveParams["page"], `"`, "")
+						handler.Url = val.DirectiveParams["url"]
+						handler.IsStatic = val.Direcive == annotations.STATIC
+						if _, ok := val.DirectiveParams["debug"]; ok {
+							handler.IsDebug = true
+
+						}
+						if handler.IsStatic && !handler.IsDebug {
+							slog.Info("Generator", "Params", val.DirectiveParams)
+							handlerStaticFileGeneration()
+						}
+						handlers = append(handlers, handler)
+					}
+
+					routes = append(routes, Route{
+						PackageName: packageName,
+						RouteGroup:  pathToFile,
+						RouteName:   routeName,
+						Handlers:    handlers,
+					})
+				} else {
+					slog.Error("Generator", "file types other than index.go not implemented yet.file name", path)
+				}
+			} else {
+				//do something specific to different file patterns
+				return nil
+			}
 			return nil
-		}
-		return nil
-	})
+		},
+	)
 
 	if err != nil {
 		slog.Error("Generator", "Error walking the path:", err.Error())

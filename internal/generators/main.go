@@ -7,6 +7,7 @@ import (
 	"github.com/harish876/hypefx/internal/generators/template"
 )
 
+// todo change the directories to pwd
 func main() {
 	var MODE = flag.String("mode", "test", "mode for running the cli temporarily")
 	flag.Parse()

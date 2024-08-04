@@ -56,10 +56,7 @@ func (r *AnnotationParser) ParseDirective(annotation *Annotation) (int, error) {
 	}
 
 	start := idx
-	for {
-		if idx == len(token) || token[idx] == '(' {
-			break
-		}
+	for idx != len(token) && token[idx] != '(' {
 		idx++
 	}
 	directive := token[start:idx]
@@ -69,6 +66,7 @@ func (r *AnnotationParser) ParseDirective(annotation *Annotation) (int, error) {
 	return idx, nil
 }
 
+// Wrote a tokenizer without writing a tokenizer
 func (r *AnnotationParser) ParseArgs(idx int, annotation *Annotation) (int, error) {
 	token := r.Comment
 
@@ -81,15 +79,9 @@ func (r *AnnotationParser) ParseArgs(idx int, annotation *Annotation) (int, erro
 	}
 	idx++ //move to the next byte
 
-	for {
-		if idx >= len(token) {
-			break
-		}
+	for idx < len(token) {
 
-		for {
-			if token[idx] != ' ' {
-				break
-			}
+		for token[idx] == ' ' {
 			idx++
 		}
 
@@ -108,10 +100,7 @@ func (r *AnnotationParser) ParseArgs(idx int, annotation *Annotation) (int, erro
 		slog.Debug("ParseArgs", "Key", key)
 		idx++ //move ahead of the =
 
-		for {
-			if token[idx] != ' ' {
-				break
-			}
+		for token[idx] == ' ' {
 			idx++
 		}
 
@@ -137,10 +126,7 @@ func ParseAnnotations(comment string) (Annotation, error) {
 	if strings.HasPrefix(comment, "//") {
 		token = strings.TrimPrefix(comment, "//")
 		idx := 0
-		for {
-			if token[idx] != ' ' {
-				break
-			}
+		for token[idx] == ' ' {
 			idx++
 		}
 		token = token[idx:]

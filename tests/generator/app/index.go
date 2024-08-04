@@ -9,6 +9,7 @@ import (
 )
 
 // @get
+// @static(url="/about",page="home.html",debug="true")
 func HomeHandler(c echo.Context) error {
 	return template.Render(c, http.StatusOK, home.Home())
 }
