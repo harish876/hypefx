@@ -26,7 +26,7 @@ func main() {
 	loggerConfig := utils.FromConfig(filepath.Join("tmp", "hypefx.log"))
 	jsonHandler := slog.NewJSONHandler(loggerConfig, &slog.HandlerOptions{
 		AddSource: true,
-		Level:     utils.FromLogLevel("level"),
+		Level:     utils.FromLogLevel("info"),
 	})
 	slog.SetDefault(slog.New(jsonHandler))
 

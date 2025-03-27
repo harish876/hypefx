@@ -113,6 +113,5 @@ var BuildCmd = &cobra.Command{
 	Short:   "Builds the routes using the app directory",
 	Long:    `Builds the routes dynamically using the app directory. This provides a neat compile time FBR`,
 	Example: "hype build",
-	Args:    cobra.ExactArgs(1),
 	Run:     build,
 }

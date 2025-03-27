@@ -23,7 +23,7 @@ func FromConfig(path string) *lumberjack.Logger {
 func FromLogLevel(level string) slog.Level {
 	formattedLevel := strings.ToUpper(level)
 	switch formattedLevel {
-	case "LEVEL":
+	case "INFO":
 		return slog.LevelInfo
 	case "DEBUG":
 		return slog.LevelDebug
